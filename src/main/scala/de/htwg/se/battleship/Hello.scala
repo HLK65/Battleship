@@ -1,6 +1,6 @@
-package de.htwg.se.yourgame
+package de.htwg.se.battleship
 
-import de.htwg.se.yourgame.model.Student
+import de.htwg.se.battleship.model.Student
 
 object Hello {
   def main(args: Array[String]): Unit = {

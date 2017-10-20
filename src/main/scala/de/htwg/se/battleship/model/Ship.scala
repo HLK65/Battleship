@@ -1,21 +1,23 @@
-package de.htwg.se.yourgame.model
+package de.htwg.se.battleship.model
 
 /**
   * Creates the Ship. The size and color can´t be changed.
-  * @param size the amount of fields the ship takes.
+  *
+  * @param SIZE  the amount of fields the ship takes.
   * @param COLOR the color the ships has. THe player has the same color so that ships can be linked to the player
   */
-case class Ship(val size: Int, val COLOR: Enumeration) {
+// TODO Enum for color
+case class Ship(val SIZE: Int, val COLOR: String) {
 
-  var hitPoints = size
+  var hitPoints = SIZE
 
   /**
-    * Removes one point from the hitpoints
-    * @return new hitpoints
+    * Removes one point from the hitPoints
+    *
+    * @return new hitPoints
     */
   def hitShip(): Int = {
     hitPoints = hitPoints-1
     return hitPoints
   }
 }
-
