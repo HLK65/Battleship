@@ -1,5 +1,5 @@
 package de.htwg.se.yourgame.model
 
-case class Player(COLOR: Enumeration) {
+case class Player( val COLOR: Enumeration) {
 
 }
