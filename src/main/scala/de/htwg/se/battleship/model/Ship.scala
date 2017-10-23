@@ -17,7 +17,7 @@ case class Ship(val SIZE: Int, val COLOR: String) {
     * @return new hitPoints
     */
   def hitShip(): Int = {
-    hitPoints = hitPoints-1
-    return hitPoints
+    hitPoints = hitPoints - 1 //-= 1 schöner?
+    hitPoints
   }
 }
