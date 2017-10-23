@@ -9,7 +9,7 @@ package de.htwg.se.battleship.model
 // TODO Enum for color
 case class Ship(val SIZE: Int, val COLOR: String) {
 
-  var hitPoints = SIZE
+  var hitPoints = SIZE // TODO var vermeiden
 
   /**
     * Removes one point from the hitPoints
