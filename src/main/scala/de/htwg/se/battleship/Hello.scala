@@ -11,6 +11,6 @@ object Hello {
 
     val field = Field(20, player1, player2)
 
-    new TuiView().printField(field);
+    new TuiView().printField(field)
   }
 }
