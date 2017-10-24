@@ -14,7 +14,7 @@ case class Field(size: Int, player: Player) {
   }
   def placeShip(points: Array[Point], size: Int): Unit = {
     val ship = Ship(size, player.COLOR)
-    for (x <- 0 to points.length - 1) {
+    for (x <- 0 until points.length) {
       val point: Point = Point(points(x).x, points(x).y, ship)
       grid += point
     }
