@@ -13,15 +13,12 @@ class TuiView {
         else if (y == 0 && x != 0) {
           if (x.toString.length == 2) print(" " + x)
           else print(" " + x + " ")
-        }
-        else if (x == 0 && y != 0) {
+        } else if (x == 0 && y != 0) {
           if (y.toString.length == 2) print(" " + y)
           else print(" " + y + " ")
-        }
-        else if (Random.nextBoolean()) {
+        } else if (Random.nextBoolean()) {
           print(" x ")
-        }
-        else {
+        } else {
           print(" - ")
         }
       }

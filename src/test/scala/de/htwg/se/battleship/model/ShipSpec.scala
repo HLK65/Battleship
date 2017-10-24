@@ -2,7 +2,6 @@ package de.htwg.se.battleship.model
 
 import org.scalatest._
 
-
 class ShipSpec extends FlatSpec with Matchers {
   "A Ship" should "have a color" in {
     Ship(2, "white").COLOR should be("white")

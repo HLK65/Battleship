@@ -9,7 +9,7 @@ object Hello {
     val player2 = Player("Blue")
     println("Hello, " + player1.COLOR, player2.COLOR)
 
-    val field = Field(15, player1, player2)
+    val field = Field(15, player1)
 
     new TuiView().printField(field)
   }
