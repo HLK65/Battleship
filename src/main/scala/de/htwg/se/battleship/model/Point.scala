@@ -3,17 +3,16 @@ package de.htwg.se.battleship.model
 case class Point(x: Int, y: Int) {
   var ships = new Array[Ship](2) //TODO var vermeiden
   def placeShip(ship: Ship) = {
-    if(ships(0) == null){
+    if (ships(0) == null) {
       ships(0) = ship
-    }else{
+    } else {
       ships(1) = ship
     }
   }
   def hitPoint(): Boolean = {
-    if(ships.isEmpty){
+    if (ships.isEmpty) {
       return false
-    }
-    else{
+    } else {
       ships = new Array[Ship](2)
       return true
     }
