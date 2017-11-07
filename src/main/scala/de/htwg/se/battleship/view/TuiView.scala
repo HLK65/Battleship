@@ -2,10 +2,9 @@ package de.htwg.se.battleship.view
 
 import de.htwg.se.battleship.model._
 
-import scala.util.Random
-
 class TuiView {
   def printField(field: Field): Unit = {
+    println("Field of player " + field.player.COLOR)
     for (y <- 0 to field.size) {
       println()
       for (x <- 0 to field.size) {
@@ -16,12 +15,13 @@ class TuiView {
         } else if (x == 0 && y != 0) {
           if (y.toString.length == 2) print(" " + y)
           else print(" " + y + " ")
-        } else if (Random.nextBoolean()) {
+        } else if (field.grid.contains(Point(x, y))) {
           print(" x ")
         } else {
           print(" - ")
         }
       }
     }
+    println()
   }
 }

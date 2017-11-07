@@ -1,4 +1,4 @@
 package de.htwg.se.battleship.model
 
-case class Player(val COLOR: String) {
+case class Player(COLOR: String, field: Field) {
 }
