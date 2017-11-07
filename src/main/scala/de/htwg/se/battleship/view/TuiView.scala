@@ -3,8 +3,9 @@ package de.htwg.se.battleship.view
 import de.htwg.se.battleship.model._
 
 class TuiView {
-  def printField(field: Field): Unit = {
-    println("Field of player " + field.player.COLOR)
+  def printField(player: Player): Unit = {
+    val field = player.field
+    println("Field of player " + player.COLOR)
     for (y <- 0 to field.size) {
       println()
       for (x <- 0 to field.size) {
