@@ -7,6 +7,7 @@ object Battleship {
   def main(args: Array[String]): Unit = {
 
     val tuiView = new TuiView()
+    tuiView.gameStart()
 
   }
 }

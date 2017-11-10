@@ -4,28 +4,36 @@ import scala.collection.mutable.ListBuffer
 case class Field(size: Int) {
 
   val grid = ListBuffer[Point]()
-
+  val fieldGrid:scala.collection.mutable.Map[Point, Ship] = scala.collection.mutable.Map()
   /*
     shoot on point, if water return water, if hit return hit, if hit & sunk return sunk
    */
   def hitField(point: Point): String = {
-    var hitShip = false
-    if(grid.contains(point)){
-      hitShip = true
-      grid -= point
+    var hitShip = "hit water"
+    if(fieldGrid.contains(point)){
+      val ship = fieldGrid.apply(point)
+      fieldGrid -= point
+      if(ship.hitPoints == 0){
+        ship.SIZE + " sunk"
+      }else{
+        "hit ship"
+      }
     }
-    return hitShip.toString
-  }
+    hitShip
+   }
 
   /*
   calculate points used, check if all points free -> place ship and return true else return false
    */
   def placeShip(point: Point, size: Int, orientation: String): Boolean = {
-    /*val ship = Ship(size, player.COLOR)
-    for (x <- 0 until points.length) {
-      grid += points(x)
-    }*/
-    return null //TODO
+
+    if(fieldGrid.contains(point)){
+      false
+    }else{
+      val ship = Ship(size)
+      fieldGrid += point -> ship
+      true
+    }
   }
 
 }

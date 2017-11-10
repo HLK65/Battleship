@@ -16,10 +16,10 @@ case class Controller(fieldSize: Int) {
 
 
   def placeShip(player:Player, startPoint: Point, shipSize: Int, orientation: Orientation): Boolean={
-    return player.field.placeShip(startPoint, shipSize, orientation.toString)
+     player.field.placeShip(startPoint, shipSize, orientation.toString)
   }
   def hitShip(playerToHit:Player, pointToHit: Point): String={
-    return playerToHit.field.hitField(pointToHit)
+    playerToHit.field.hitField(pointToHit)
   }
 
 }
