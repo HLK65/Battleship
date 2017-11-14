@@ -6,3 +6,5 @@ var a = shipConfig(4)
 shipConfig(4).##.-(1)
 
 val fieldGrid: scala.collection.mutable.Map[Point, Ship] = scala.collection.mutable.Map()
+
+println(Console.BLUE + "123")

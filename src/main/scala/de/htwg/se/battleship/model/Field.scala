@@ -1,5 +1,4 @@
 package de.htwg.se.battleship.model
-import scala.collection.mutable.ListBuffer
 
 case class Field(size: Int) {
 
@@ -35,14 +34,17 @@ case class Field(size: Int) {
     } else {
       val ship = Ship(size)
       if (orientation.equals(Orientation.HORIZONTAL.toString)) {
-
-        for (x <- 0 to ship.SIZE) {
-          var pointToPlace = Point(point.x + x, point.y)
+        //todo check if all points are free
+        for (x <- 0 until ship.SIZE) {
+          val pointToPlace = Point(point.x + x, point.y)
           fieldGrid += pointToPlace -> ship
         }
       } else {
-
-        fieldGrid += point -> ship
+        //todo check if all points are free
+        for (y <- 0 until ship.SIZE) {
+          val pointToPlace = Point(point.x, point.y + y)
+          fieldGrid += pointToPlace -> ship
+        }
       }
       true
     }
