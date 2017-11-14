@@ -18,8 +18,9 @@ case class Field(size: Int) {
       }else{
         "hit ship"
       }
+    }else{
+      hitShip
     }
-    hitShip
    }
 
   /*
