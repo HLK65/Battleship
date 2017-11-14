@@ -17,27 +17,35 @@ class TuiView {
   def placeShipTurn(player: Player, nextPlayer: Player): Unit = {
     //check if the player still has ships to place
     if (player.shipConfig.size > 0) {
+      println(player.COLOR + "s turn")
+
       printField(player.field, player.COLOR)
+
       //show player what ships he still has to place
       println("Ships you can place" + player.shipConfig.toString())
       //read what kind of ship the player wanted to place
       println("Select size of the ship you want to place")
-      val input: Int = scala.io.StdIn.readLine().toInt
-      //check if ship is available to place
-      if (player.shipConfig(input).toInt <= 0) throw new Exception("invalid input")
+      val input = scala.io.StdIn.readLine().toInt
+      //check for valid input
+      if (!player.shipConfig.contains(input)) {
+        sys.error("Invalid input, try again")
+        placeShipTurn(player, nextPlayer)
+        return
+      }
+
       //read Point
       println("Select Point. x then y")
       val pointInputX = scala.io.StdIn.readLine()
       val pointInputY = scala.io.StdIn.readLine()
       val point = Point(pointInputX.toInt, pointInputY.toInt)
-      println("Choose orientation. 1 horizontal, 2 vertical")
+      println("Choose orientation. 1 horizontal, else vertical")
       val inputOrientation = scala.io.StdIn.readLine()
 
       if (controller.placeShip(player, point, 5, if (inputOrientation.toInt == 1) Orientation.HORIZONTAL else Orientation.VERTICAL)) {
         //remove ship from inventory
-        player.shipConfig(input).toInt.-(1)
+        val shipsOfShipsizeLeft = player.shipConfig(input).toInt.-(1)
+        if (shipsOfShipsizeLeft <= 0) player.shipConfig.remove(input)
         println("Ship placed")
-        println(nextPlayer.COLOR + "s turn")
         placeShipTurn(nextPlayer, player)
       } else {
         println("Can´t place ship there, try again")

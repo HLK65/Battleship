@@ -12,10 +12,10 @@ case class Controller(fieldSize: Int) {
   val field2 = Field(fieldSize)
 
   //1x5Felder, 2x4Felder, 3x3Felder, 4x2Felder
-  val shipConfig: scala.collection.mutable.Map[Int, Int] = scala.collection.mutable.Map(5 -> 1, 4 -> 2 /*, 3 -> 3, 2 -> 4*/)
+  val shipConfig: scala.collection.mutable.Map[Int, Int] = scala.collection.mutable.Map(5 -> 1, 4 -> 1 /*, 3 -> 3, 2 -> 4*/)
 
-  val player1 = Player(player1Color, field1, shipConfig)
-  val player2 = Player(player2Color, field2, shipConfig)
+  val player1 = Player(player1Color, field1, shipConfig.clone())
+  val player2 = Player(player2Color, field2, shipConfig.clone())
 
 
   def placeShip(player: Player, startPoint: Point, shipSize: Int, orientation: Orientation): Boolean = {
