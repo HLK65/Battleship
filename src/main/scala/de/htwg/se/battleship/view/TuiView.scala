@@ -5,7 +5,6 @@ import de.htwg.se.battleship.model._
 
 class TuiView {
 
-
   //TODO make size changeable
   val controller = Controller(15)
 
@@ -69,7 +68,7 @@ class TuiView {
         } else if (x == 0 && y != 0) {
           if (y.toString.length == 2) print(" " + y)
           else print(" " + y + " ")
-        } else if (field.grid.contains(Point(x, y))) {
+        } else if (field.hasShip(Point(x, y))) {
           print(" x ")
         } else {
           print(" - ")
