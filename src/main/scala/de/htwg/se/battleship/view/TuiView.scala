@@ -6,7 +6,7 @@ import de.htwg.se.battleship.model._
 class TuiView {
 
   //TODO make size changeable
-  val controller = Controller(15)
+  val controller = Controller(10)
 
   def gameStart() = {
     println("Game starts")
@@ -29,30 +29,30 @@ class TuiView {
       println("Ships you can place" + player.shipConfig.toString())
       //read what kind of ship the player wanted to place
       println("Select size of the ship you want to place")
-      val inputSize = scala.io.StdIn.readLine().toInt
+      val inputSize = scala.io.StdIn.readInt()
       //check for valid inputSize
       if (!player.shipConfig.contains(inputSize)) {
-        sys.error("Invalid inputSize, try again")
+        println("Invalid inputSize, try again")
         placeShipTurn(player, nextPlayer)
         return
       }
 
       //read Point
       println("Select Point. x then y")
-      val pointInputX = scala.io.StdIn.readLine()
-      val pointInputY = scala.io.StdIn.readLine()
-      val point = Point(pointInputX.toInt, pointInputY.toInt)
+      val pointInputX = scala.io.StdIn.readInt()
+      val pointInputY = scala.io.StdIn.readInt()
+      val point = Point(pointInputX, pointInputY)
       println("Choose orientation. 1 horizontal, else vertical")
-      val inputOrientation = scala.io.StdIn.readLine()
+      val inputOrientation = scala.io.StdIn.readInt()
 
-      if (controller.placeShip(player, point, inputSize, if (inputOrientation.toInt == 1) Orientation.HORIZONTAL else Orientation.VERTICAL)) {
+      if (controller.placeShip(player, point, inputSize, if (inputOrientation == 1) Orientation.HORIZONTAL else Orientation.VERTICAL)) {
         //remove ship from inventory
         val shipsOfShipsizeLeft = player.shipConfig(inputSize).toInt.-(1)
         if (shipsOfShipsizeLeft <= 0) player.shipConfig.remove(inputSize)
         println("Ship placed")
         placeShipTurn(nextPlayer, player)
       } else {
-        println("Can´t place ship there, try again")
+        println("Can´t place ship there, try again \n ###################################### \n")
         placeShipTurn(player, nextPlayer)
       }
     } else {
