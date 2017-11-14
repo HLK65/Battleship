@@ -48,6 +48,7 @@ class TuiView {
       if (controller.placeShip(player, point, inputSize, if (inputOrientation == 1) Orientation.HORIZONTAL else Orientation.VERTICAL)) {
         //remove ship from inventory
         val shipsOfShipsizeLeft = player.shipConfig(inputSize).toInt.-(1)
+        player.shipConfig(inputSize) = shipsOfShipsizeLeft
         if (shipsOfShipsizeLeft <= 0) player.shipConfig.remove(inputSize)
         println("Ship placed")
         placeShipTurn(nextPlayer, player)
