@@ -9,32 +9,47 @@ class TuiView {
   //TODO make size changeable
   val controller = Controller(15)
 
-  def gameStart()={
+  def gameStart() = {
     println("Game starts")
     placeShipTurn(controller.player1, controller.player2)
   }
 
-  def placeShipTurn(player: Player, nextPlayer: Player): Boolean={
-    //TODO check if the player still has ships to place
-    printField(player.field, player.COLOR)
-    println("Select Ship type to place")
-    //TODO show player what ships he still has to place
-    //TODO read what kind of ship the player wanted to place
-    println("Select Point and Orientation")
-    //TODO read Point
-    val point = Point(10, 10)
-    if(controller.placeShip(player, point, 5, Orientation.HORIZONTAL)){
-      println("Ship placed")
-      println(nextPlayer.COLOR +"s turn")
-      placeShipTurn(nextPlayer, player)
-    }else{
-         println("Can´t place ship there, try again")
-         placeShipTurn(player, nextPlayer)
-        }
+  def placeShipTurn(player: Player, nextPlayer: Player): Unit = {
+    //check if the player still has ships to place
+    if (player.shipConfig.size > 0) {
+      printField(player.field, player.COLOR)
+      //show player what ships he still has to place
+      println("Ships you can place" + player.shipConfig.toString())
+      //read what kind of ship the player wanted to place
+      println("Select size of the ship you want to place")
+      val input: Int = scala.io.StdIn.readLine().toInt
+      //check if ship is available to place
+      if (player.shipConfig(input).toInt <= 0) throw new Exception("invalid input")
+      //read Point
+      println("Select Point. x then y")
+      val pointInputX = scala.io.StdIn.readLine()
+      val pointInputY = scala.io.StdIn.readLine()
+      val point = Point(pointInputX.toInt, pointInputY.toInt)
+      println("Choose orientation. 1 horizontal, 2 vertical")
+      val inputOrientation = scala.io.StdIn.readLine()
 
+      if (controller.placeShip(player, point, 5, if (inputOrientation.toInt == 1) Orientation.HORIZONTAL else Orientation.VERTICAL)) {
+        //remove ship from inventory
+        player.shipConfig(input).toInt.-(1)
+        println("Ship placed")
+        println(nextPlayer.COLOR + "s turn")
+        placeShipTurn(nextPlayer, player)
+      } else {
+        println("Can´t place ship there, try again")
+        placeShipTurn(player, nextPlayer)
+      }
+    } else {
+      //todo
+      println("all ships placed")
+    }
   }
 
-  def printField(field: Field, color:String): Unit = {
+  def printField(field: Field, color: String): Unit = {
     println("Field of player " + color)
     for (y <- 0 to field.size) {
       println()
