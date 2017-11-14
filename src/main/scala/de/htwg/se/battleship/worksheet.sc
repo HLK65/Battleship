@@ -7,4 +7,8 @@ shipConfig(4).##.-(1)
 
 val fieldGrid: scala.collection.mutable.Map[Point, Ship] = scala.collection.mutable.Map()
 
-println(Console.BLUE + "123")
+
+
+/* Todo
+  * save and visualize where you have shot already
+ */

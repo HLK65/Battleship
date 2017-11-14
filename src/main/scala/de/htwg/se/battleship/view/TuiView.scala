@@ -11,17 +11,43 @@ class TuiView {
   def gameStart() = {
     println("Game starts")
     placeShipTurn(controller.player1, controller.player2)
+    val winner = shootShipTurn(controller.player1, controller.player2)
+    println(Console.BLACK + winner.COLOR + " won")
+
+  }
+
+  def playerSwitch(player: Player): Unit = {
+    if (player.COLOR.toString.equals(controller.player1.COLOR.toString)) {
+      print(Console.RED)
+    } else {
+      print(Console.BLUE)
+    }
+    println(player.COLOR + "s turn")
+  }
+
+  /*
+    recursively called method to shoot other players ship until only one player got ships left
+    winning player is returned
+   */
+  def shootShipTurn(player: Player, nextPlayer: Player): Player = {
+    playerSwitch(player)
+
+    println("Select Point you want to shoot. x then y")
+    val xInput = scala.io.StdIn.readInt()
+    val yInput = scala.io.StdIn.readInt()
+    val point = Point(xInput, yInput)
+    println(nextPlayer.field.hitField(point))
+
+    if (nextPlayer.field.fieldGrid.isEmpty) return player //return winning player
+
+    shootShipTurn(nextPlayer, player)
+
   }
 
   def placeShipTurn(player: Player, nextPlayer: Player): Unit = {
     //check if the player still has ships to place
     if (player.shipConfig.size > 0) {
-      if (player.COLOR.toString.equals(controller.player1.COLOR.toString)) {
-        print(Console.RED)
-      } else {
-        print(Console.BLUE)
-      }
-      println(player.COLOR + "s turn")
+      playerSwitch(player)
 
       printField(player.field, player.COLOR)
 
