@@ -34,7 +34,16 @@ case class Field(size: Int) {
       false
     } else {
       val ship = Ship(size)
-      fieldGrid += point -> ship
+      if (orientation.equals(Orientation.HORIZONTAL.toString)) {
+
+        for (x <- 0 to ship.SIZE) {
+          var pointToPlace = Point(point.x + x, point.y)
+          fieldGrid += pointToPlace -> ship
+        }
+      } else {
+
+        fieldGrid += point -> ship
+      }
       true
     }
   }
