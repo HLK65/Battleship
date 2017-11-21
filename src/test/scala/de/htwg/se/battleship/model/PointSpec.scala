@@ -5,9 +5,9 @@ import org.scalatest._
 class PointSpec extends FlatSpec with Matchers {
 
   "A Point" should "have a x value " in {
-    var point = Point(1, 2).x should be(1)
+    Point(1, 2).x should be(1)
   }
   "A Point" should "have a y value" in {
-    var point = Point(1, 2).y should be(2)
+    Point(1, 2).y should be(2)
   }
 }
