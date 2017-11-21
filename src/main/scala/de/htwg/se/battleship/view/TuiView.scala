@@ -5,6 +5,15 @@ import de.htwg.se.battleship.model._
 
 class TuiView extends View {
 
+  def playerSwitch(player: Player): Unit = {
+    if (player.COLOR.toString.equals("Red")) {
+      print(Console.RED)
+    } else {
+      print(Console.BLUE)
+    }
+    println(player.COLOR + "s turn")
+  }
+
   def printField(field: Field, color: String): Unit = {
     println("Field of player " + color)
     for (y <- 0 to field.size) {

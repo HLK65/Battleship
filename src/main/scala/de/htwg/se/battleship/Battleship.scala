@@ -11,7 +11,5 @@ object Battleship {
     val controller = Controller(10, new TuiView())
     controller.gameStart()
 
-
-
   }
 }

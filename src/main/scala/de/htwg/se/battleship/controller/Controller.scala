@@ -1,9 +1,9 @@
 package de.htwg.se.battleship.controller
 
-import de.htwg.se.battleship.model.{Field, Orientation, Player, Point}
+import de.htwg.se.battleship.model.{ Field, Orientation, Player, Point }
 import de.htwg.se.battleship.view.View
 
-case class Controller(fieldSize: Int, view:View) {
+case class Controller(fieldSize: Int, view: View) {
 
   val player1Color = "Red"
   val player2Color = "Blue"
@@ -33,21 +33,12 @@ case class Controller(fieldSize: Int, view:View) {
 
   }
 
-  def playerSwitch(player: Player): Unit = {
-    if (player.COLOR.toString.equals(player1.COLOR.toString)) {
-      print(Console.RED)
-    } else {
-      print(Console.BLUE)
-    }
-    println(player.COLOR + "s turn")
-  }
-
   /*
    recursively called method to shoot other players ship until only one player got ships left
    winning player is returned
   */
   def shootShipTurn(player: Player, nextPlayer: Player): Player = {
-    playerSwitch(player)
+    view.playerSwitch(player)
 
     println("Select Point you want to shoot. x then y")
     val xInput = scala.io.StdIn.readInt()
@@ -61,11 +52,10 @@ case class Controller(fieldSize: Int, view:View) {
 
   }
 
-
   def placeShipTurn(player: Player, nextPlayer: Player): Unit = {
     //check if the player still has ships to place
     if (player.shipConfig.size > 0) {
-      playerSwitch(player)
+      view.playerSwitch(player)
 
       view.printField(player.field, player.COLOR)
 
