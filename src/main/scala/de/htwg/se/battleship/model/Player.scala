@@ -1,4 +1,4 @@
 package de.htwg.se.battleship.model
 
-case class Player(COLOR: String, field: Field, shipConfig: scala.collection.mutable.Map[Int, Int]) {
+case class Player(COLOR: String, field: Field, shipInventory: scala.collection.mutable.Map[Int, Int]) {
 }

@@ -58,7 +58,7 @@ class TuiView extends View {
 
   override def selectShip(player: Player): Int = {
     //show player what ships he still has to place
-    println("Ships you can place" + player.shipConfig.toString())
+    println("Ships you can place" + player.shipInventory.toString())
     //read what kind of ship the player wanted to place
     println("Select size of the ship you want to place")
     val inputSize = scala.io.StdIn.readInt()
