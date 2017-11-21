@@ -29,18 +29,17 @@ case class Field(size: Int) {
   /*
     calculate points used, check if all points free -> place ship and return true else return false
    */
+  //TODO use orientation enum instead of string
   def placeShip(point: Point, size: Int, orientation: String): Boolean = {
     val fieldGridCopy = fieldGrid.clone()
     var success = true
     val ship = Ship(size)
     if (orientation.equals(Orientation.HORIZONTAL.toString)) {
-      //todo check if all points are free
       for (x <- 0 until ship.SIZE) {
         val pointToPlace = Point(point.x + x, point.y)
         if (!addPointToGrid(pointToPlace, ship)) success = false
       }
     } else {
-      //todo check if all points are free
       for (y <- 0 until ship.SIZE) {
         val pointToPlace = Point(point.x, point.y + y)
         if (!addPointToGrid(pointToPlace, ship)) success = false
