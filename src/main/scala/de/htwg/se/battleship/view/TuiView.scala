@@ -1,9 +1,25 @@
 package de.htwg.se.battleship.view
 
-import de.htwg.se.battleship.controller.Controller
 import de.htwg.se.battleship.model._
 
 class TuiView extends View {
+
+  override def startGame: Unit = {
+    println("Game starts")
+  }
+
+  override def announceWinner(color: String): Unit = {
+    println(Console.BLACK + color + " won")
+  }
+
+  def shootTurn(): Point = {
+
+    println("Select Point you want to shoot. x then y")
+    val xInput = scala.io.StdIn.readInt()
+    val yInput = scala.io.StdIn.readInt()
+    val point = Point(xInput, yInput)
+    point
+  }
 
   def playerSwitch(player: Player): Unit = {
     if (player.COLOR.toString.equals("Red")) {
@@ -34,5 +50,34 @@ class TuiView extends View {
       }
     }
     println()
+  }
+
+  override def printMessage(message: String): Unit = {
+    print(message)
+  }
+
+  override def selectShip(player: Player): Int = {
+    //show player what ships he still has to place
+    println("Ships you can place" + player.shipConfig.toString())
+    //read what kind of ship the player wanted to place
+    println("Select size of the ship you want to place")
+    val inputSize = scala.io.StdIn.readInt()
+    inputSize
+  }
+
+  override def readPoint(): Point = {
+
+    println("Select Point. x then y")
+    val pointInputX = scala.io.StdIn.readInt()
+    val pointInputY = scala.io.StdIn.readInt()
+    val point = Point(pointInputX, pointInputY)
+    point
+  }
+
+  override def readOrientation(): Int = {
+
+    println("Choose orientation. 1 horizontal, else vertical")
+    val inputOrientation = scala.io.StdIn.readInt()
+    inputOrientation
   }
 }
