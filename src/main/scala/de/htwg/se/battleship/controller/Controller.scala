@@ -26,10 +26,10 @@ case class Controller(fieldSize: Int, view: View) {
   }
 
   def gameStart() = {
-    println("Game starts")
+    view.startGame
     placeShipTurn(player1, player2)
     val winner = shootShipTurn(player1, player2)
-    println(Console.BLACK + winner.COLOR + " won")
+    view.announceWinner(winner.COLOR)
 
   }
 
@@ -40,11 +40,8 @@ case class Controller(fieldSize: Int, view: View) {
   def shootShipTurn(player: Player, nextPlayer: Player): Player = {
     view.playerSwitch(player)
 
-    println("Select Point you want to shoot. x then y")
-    val xInput = scala.io.StdIn.readInt()
-    val yInput = scala.io.StdIn.readInt()
-    val point = Point(xInput, yInput)
-    println(nextPlayer.field.hitField(point))
+    var point = view.shootTurn()
+    view.printMessage(nextPlayer.field.hitField(point))
 
     if (nextPlayer.field.fieldGrid.isEmpty) return player //return winning player
 
@@ -59,40 +56,31 @@ case class Controller(fieldSize: Int, view: View) {
 
       view.printField(player.field, player.COLOR)
 
-      //show player what ships he still has to place
-      println("Ships you can place" + player.shipConfig.toString())
-      //read what kind of ship the player wanted to place
-      println("Select size of the ship you want to place")
-      val inputSize = scala.io.StdIn.readInt()
-      //check for valid inputSize
+      val inputSize = view.selectShip(player)
       if (!player.shipConfig.contains(inputSize)) {
-        println("Invalid inputSize, try again")
+        view.printMessage("Invalid inputSize, try again")
         placeShipTurn(player, nextPlayer)
         return
       }
 
       //read Point
-      println("Select Point. x then y")
-      val pointInputX = scala.io.StdIn.readInt()
-      val pointInputY = scala.io.StdIn.readInt()
-      val point = Point(pointInputX, pointInputY)
-      println("Choose orientation. 1 horizontal, else vertical")
-      val inputOrientation = scala.io.StdIn.readInt()
+      val point = view.readPoint()
+      val inputOrientation = view.readOrientation()
 
       if (placeShip(player, point, inputSize, if (inputOrientation == 1) Orientation.HORIZONTAL else Orientation.VERTICAL)) {
         //remove ship from inventory
         val shipsOfShipsizeLeft = player.shipConfig(inputSize).toInt.-(1)
         player.shipConfig(inputSize) = shipsOfShipsizeLeft
         if (shipsOfShipsizeLeft <= 0) player.shipConfig.remove(inputSize)
-        println("Ship placed")
+        view.printMessage("Ship placed")
         placeShipTurn(nextPlayer, player)
       } else {
-        println("Can´t place ship there, try again \n ###################################### \n")
+        view.printMessage("Can´t place ship there, try again \n ###################################### \n")
         placeShipTurn(player, nextPlayer)
       }
     } else {
       //todo
-      println("all ships placed")
+      view.printMessage("all ships placed")
     }
   }
 
