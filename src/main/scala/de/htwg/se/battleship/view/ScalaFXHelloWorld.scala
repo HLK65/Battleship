@@ -1,4 +1,4 @@
-package de.htwg.se.battleship
+package de.htwg.se.battleship.view
 
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
