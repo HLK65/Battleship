@@ -15,4 +15,5 @@ val fieldGrid: scala.collection.mutable.Map[Point, Ship] = scala.collection.muta
   * GUI (swing or scalaFX)
   * WUI (play)
   * save and visualize where you have shot already
+  * akka
  */
