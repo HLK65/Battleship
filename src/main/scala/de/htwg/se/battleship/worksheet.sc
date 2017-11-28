@@ -10,10 +10,10 @@ val fieldGrid: scala.collection.mutable.Map[Point, Ship] = scala.collection.muta
 
 
 /* Todo
-  * refactor, mvc pattern!
   * unit tests
   * GUI (swing or scalaFX)
   * WUI (play)
   * save and visualize where you have shot already
   * akka
+  * [3+ player]
  */
