@@ -2,13 +2,21 @@ package de.htwg.se.battleship.view
 
 import scalafx.Includes._
 import scalafx.application.JFXApp
+import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
 import scalafx.scene.paint.Color._
 import scalafx.scene.shape.Rectangle
 
 object ScalaFxDemo extends JFXApp {
-  stage = new JFXApp.PrimaryStage {
-    title.value = "Hello Stage"
+
+  var test = "test"
+  def changeTest(testing: String) {
+
+    test = testing
+  }
+
+  stage = new PrimaryStage {
+    title.value = test
     width = 600
     height = 450
     scene = new Scene {
@@ -22,4 +30,5 @@ object ScalaFxDemo extends JFXApp {
       }
     }
   }
+
 }

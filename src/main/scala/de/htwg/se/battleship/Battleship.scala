@@ -2,7 +2,7 @@ package de.htwg.se.battleship
 
 import de.htwg.se.battleship.controller.Controller
 import de.htwg.se.battleship.model._
-import de.htwg.se.battleship.view.TuiView
+import de.htwg.se.battleship.view.{ ScalaFxDemo, TuiView }
 
 object Battleship {
   def main(args: Array[String]): Unit = {

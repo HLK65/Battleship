@@ -1,7 +1,7 @@
 package de.htwg.se.battleship.controller
 
 import de.htwg.se.battleship.model.{ Field, Orientation, Player, Point }
-import de.htwg.se.battleship.view.View
+import de.htwg.se.battleship.view.{ ScalaFxDemo, View }
 
 case class Controller(fieldSize: Int, view: View) {
 
@@ -27,10 +27,14 @@ case class Controller(fieldSize: Int, view: View) {
 
   def gameStart() = {
     view.startGame
-    placeShipTurn(player1, player2)
+    ScalaFxDemo.changeTest("Battleships")
+    var z: Array[String] = new Array[String](1);
+    ScalaFxDemo.main(z)
+
+    /* placeShipTurn(player1, player2)
     val winner = shootShipTurn(player1, player2)
     view.announceWinner(winner.COLOR)
-
+*/
   }
 
   /*

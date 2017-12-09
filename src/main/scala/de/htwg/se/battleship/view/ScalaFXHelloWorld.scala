@@ -7,7 +7,7 @@ import scalafx.scene.Scene
 import scalafx.scene.effect.DropShadow
 import scalafx.scene.layout.HBox
 import scalafx.scene.paint.Color._
-import scalafx.scene.paint.{LinearGradient, Stops}
+import scalafx.scene.paint.{ LinearGradient, Stops }
 import scalafx.scene.text.Text
 
 object ScalaFXHelloWorld extends JFXApp {
@@ -24,7 +24,8 @@ object ScalaFXHelloWorld extends JFXApp {
             style = "-fx-font-size: 48pt"
             fill = new LinearGradient(
               endX = 0,
-              stops = Stops(PaleGreen, SeaGreen))
+              stops = Stops(PaleGreen, SeaGreen)
+            )
           },
           new Text {
             text = "World!!!"
