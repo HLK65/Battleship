@@ -1,6 +1,7 @@
 package de.htwg.se.battleship.view
 
 import de.htwg.se.battleship.model.{ Field, Player, Point }
+import de.htwg.se.battleship.view.stages.WinnerAnnouncement
 
 import scalafx.Includes._
 import scalafx.application.JFXApp
@@ -16,7 +17,7 @@ import scalafx.scene.text.Text
 
 object GuiView extends JFXApp with View {
 
-  val z: Array[String] = new Array[String](1)
+  val args: Array[String] = new Array[String](1)
 
   val readyButton = new Button("Ready")
 
@@ -59,12 +60,12 @@ object GuiView extends JFXApp with View {
 
   override def startGame: Unit = {
     //start the main bevore you can change the stage
-    main(z);
+    main(args);
   }
 
   override def announceWinner(color: String): Unit = {
 
-    WinnerAnnouncement.announceWinner(z, color)
+    WinnerAnnouncement.announceWinner(color)
   }
 
   override def playerSwitch(player: Player): Unit = ???

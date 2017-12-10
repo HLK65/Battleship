@@ -1,7 +1,4 @@
-package de.htwg.se.battleship.view
-
-import de.htwg.se.battleship.model.{ Field, Player, Point }
-import de.htwg.se.battleship.view.GuiView.readyButton
+package de.htwg.se.battleship.view.stages
 
 import scalafx.Includes._
 import scalafx.application.JFXApp
@@ -17,9 +14,9 @@ import scalafx.scene.text.Text
 
 object WinnerAnnouncement extends JFXApp {
 
-  def announceWinner(array: Array[String], color: String): Unit = {
+  def announceWinner(color: String): Unit = {
 
-    val readyButton = new Button("Ready")
+    val readyButton = new Button("Close")
 
     readyButton.onAction = (event: ActionEvent) => {
       JFXApp.ActiveApp.stage.close()
