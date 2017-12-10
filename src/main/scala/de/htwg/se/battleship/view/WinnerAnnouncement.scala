@@ -19,11 +19,10 @@ object WinnerAnnouncement extends JFXApp {
 
   def announceWinner(array: Array[String], color: String): Unit = {
 
-
     val readyButton = new Button("Ready")
 
     readyButton.onAction = (event: ActionEvent) => {
-      stage.hide();
+      JFXApp.ActiveApp.stage.close()
     }
 
     readyButton.style = "-fx-font-size: 12pt"
@@ -57,6 +56,6 @@ object WinnerAnnouncement extends JFXApp {
         }
       }
     }
-    stage.show()
+    //    stage.show()
   }
 }

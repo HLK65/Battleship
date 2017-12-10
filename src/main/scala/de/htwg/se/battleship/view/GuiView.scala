@@ -21,7 +21,7 @@ object GuiView extends JFXApp with View {
   val readyButton = new Button("Ready")
 
   readyButton.onAction = (event: ActionEvent) => {
-    stage.hide();
+    this.announceWinner("Red")
   }
 
   readyButton.style = "-fx-font-size: 12pt"
