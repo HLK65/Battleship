@@ -28,8 +28,8 @@ object WinnerAnnouncement extends JFXApp {
     readyButton.style = "-fx-font-size: 12pt"
     JFXApp.ActiveApp.stage = new PrimaryStage {
       title.value = "We have a Winner!"
-      width = 100
-      height = 150
+      width = 300
+      height = 250
       scene = new Scene {
         fill = Black
         content = new VBox {
