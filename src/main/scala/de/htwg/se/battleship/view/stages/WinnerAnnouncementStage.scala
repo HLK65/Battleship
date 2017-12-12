@@ -12,7 +12,7 @@ import scalafx.scene.paint.Color._
 import scalafx.scene.paint.{ LinearGradient, Stops }
 import scalafx.scene.text.Text
 
-object WinnerAnnouncement extends JFXApp {
+object WinnerAnnouncementStage extends JFXApp {
 
   def announceWinner(color: String): Unit = {
 

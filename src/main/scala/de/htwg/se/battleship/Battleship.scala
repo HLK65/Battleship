@@ -8,7 +8,7 @@ object Battleship {
   def main(args: Array[String]): Unit = {
 
     //TODO make size changeable
-    val controller = Controller(10, new TuiView())
+    val controller = Controller(20, new TuiView())
     controller.gameStart()
 
   }

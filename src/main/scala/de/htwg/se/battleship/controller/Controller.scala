@@ -27,6 +27,7 @@ case class Controller(fieldSize: Int, view: View) {
 
   def gameStart() = {
     view.startGame
+    GuiView.controller = this
     GuiView.startGame
     /* placeShipTurn(player1, player2)
     val winner = shootShipTurn(player1, player2)

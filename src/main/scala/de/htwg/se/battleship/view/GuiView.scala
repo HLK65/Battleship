@@ -1,7 +1,8 @@
 package de.htwg.se.battleship.view
 
+import de.htwg.se.battleship.controller.Controller
 import de.htwg.se.battleship.model.{ Field, Player, Point }
-import de.htwg.se.battleship.view.stages.WinnerAnnouncement
+import de.htwg.se.battleship.view.stages.{ FieldStage, WinnerAnnouncementStage }
 
 import scalafx.Includes._
 import scalafx.application.JFXApp
@@ -18,11 +19,11 @@ import scalafx.scene.text.Text
 object GuiView extends JFXApp with View {
 
   val args: Array[String] = new Array[String](1)
-
   val readyButton = new Button("Ready")
-
+  //TODO Replace this shit with controller interface
+  var controller: Controller = controller
   readyButton.onAction = (event: ActionEvent) => {
-    this.announceWinner("Red")
+    this.playerSwitch(controller.player1)
   }
 
   readyButton.style = "-fx-font-size: 12pt"
@@ -65,10 +66,12 @@ object GuiView extends JFXApp with View {
 
   override def announceWinner(color: String): Unit = {
 
-    WinnerAnnouncement.announceWinner(color)
+    WinnerAnnouncementStage.announceWinner(color)
   }
 
-  override def playerSwitch(player: Player): Unit = ???
+  override def playerSwitch(player: Player): Unit = {
+    stage = FieldStage.printField(player)
+  }
 
   override def printField(field: Field, color: String): Unit = ???
 
