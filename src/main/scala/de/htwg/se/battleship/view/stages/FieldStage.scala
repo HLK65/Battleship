@@ -12,6 +12,7 @@ import scalafx.scene.control.Button
 import scalafx.scene.layout.{ GridPane, HBox, VBox }
 import scalafx.scene.paint.Color._
 import scalafx.scene.paint.{ LinearGradient, Stops }
+import scalafx.scene.shape.Rectangle
 import scalafx.scene.text.Text
 
 object FieldStage extends JFXApp {
@@ -37,13 +38,23 @@ object FieldStage extends JFXApp {
         } else if (x == 0 && y != 0) {
           gridPane.add(createText(" " + y), 0, y, 1, y)
         } else if (field.hasShip(Point(x, y))) {
-          gridPane.add(createText("x"), x, y, x, y)
+          gridPane.add(createShip(x, y), x, y, x, y)
         } else {
           gridPane.add(createText("-"), x, y, x, y)
         }
       }
     }
     gridPane
+  }
+
+  private def createShip(xCord: Int, yCord: Int): Rectangle = {
+    new Rectangle {
+      x = xCord
+      y = yCord
+      width = 10
+      height = 10
+      fill = Green
+    }
   }
 
   def createStage(player: Player, field: GridPane): PrimaryStage = {
@@ -58,7 +69,6 @@ object FieldStage extends JFXApp {
       }
     }
     stage.setFullScreen(true)
-    stage.setMaximized(true)
     stage
   }
 

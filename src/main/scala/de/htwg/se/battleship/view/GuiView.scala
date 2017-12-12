@@ -1,7 +1,7 @@
 package de.htwg.se.battleship.view
 
 import de.htwg.se.battleship.controller.Controller
-import de.htwg.se.battleship.model.{ Field, Player, Point }
+import de.htwg.se.battleship.model.{ Field, Orientation, Player, Point }
 import de.htwg.se.battleship.view.stages.{ FieldStage, WinnerAnnouncementStage }
 
 import scalafx.Includes._
@@ -70,6 +70,7 @@ object GuiView extends JFXApp with View {
   }
 
   override def playerSwitch(player: Player): Unit = {
+    player.field.placeShip(new Point(1, 1), 2, Orientation.VERTICAL.toString)
     stage = FieldStage.printField(player)
   }
 
