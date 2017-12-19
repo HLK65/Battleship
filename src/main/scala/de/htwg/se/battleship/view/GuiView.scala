@@ -1,8 +1,9 @@
 package de.htwg.se.battleship.view
 
 import de.htwg.se.battleship.controller.Controller
-import de.htwg.se.battleship.model.{ Field, Orientation, Player, Point }
-import de.htwg.se.battleship.view.stages.{ FieldStage, WinnerAnnouncementStage }
+import de.htwg.se.battleship.model.handler.ShipActionHandler
+import de.htwg.se.battleship.model._
+import de.htwg.se.battleship.view.stages.{ FieldStage, PlayerSwitchStage, WinnerAnnouncementStage }
 
 import scalafx.Includes._
 import scalafx.application.JFXApp
@@ -11,9 +12,10 @@ import scalafx.event.ActionEvent
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
 import scalafx.scene.control.Button
-import scalafx.scene.layout.{ HBox, VBox }
+import scalafx.scene.layout.{ GridPane, HBox, VBox }
 import scalafx.scene.paint.Color._
 import scalafx.scene.paint.{ LinearGradient, Stops }
+import scalafx.scene.shape.Rectangle
 import scalafx.scene.text.Text
 
 object GuiView extends JFXApp with View {
@@ -70,19 +72,95 @@ object GuiView extends JFXApp with View {
   }
 
   override def playerSwitch(player: Player): Unit = {
-    player.field.placeShip(new Point(1, 1), 2, Orientation.VERTICAL.toString)
-    stage = FieldStage.printField(player, true, controller)
+    var button = new Button("Ready")
+    button.onAction = (event: ActionEvent) => {
+      this.selectShip(player)
+    }
+    PlayerSwitchStage.createStage(player, button)
   }
 
-  override def printField(field: Field, color: String): Unit = ???
+  override def printField(field: Field, color: String): Unit = {
+  }
 
   override def shootTurn(): Point = ???
 
   override def printMessage(message: String): Unit = ???
 
-  override def selectShip(player: Player): Int = ???
+  override def selectShip(player: Player): Int = {
+    FieldStage.createStage(player, createFieldGrid(player.field, true, controller, player))
+    0
+  }
 
   override def readPoint(): Point = ???
 
   override def readOrientation(): Int = ???
+
+  def createFieldGrid(field: Field, placeTurn: Boolean, controller: Controller, player: Player): GridPane = {
+    val shipActionHandler = new ShipActionHandler(controller)
+
+    var gridPane = new GridPane {
+      hgap = 25
+      vgap = 15
+      padding = Insets(20)
+    }
+
+    for (y <- 0 to field.size) {
+      for (x <- 0 to field.size) {
+        if (x == 0 && y == 0) gridPane.add(createText(""), 0, 0, 1, 1) //0 0
+        else if (y == 0 && x != 0) {
+          gridPane.add(createText(" " + x), x, 0, x, 1)
+        } else if (x == 0 && y != 0) {
+          gridPane.add(createText(" " + y), 0, y, 1, y)
+        } else if (field.hasShip(Point(x, y))) {
+          gridPane.add(createShip(x, y), x, y, x, y)
+        } else {
+          if (placeTurn) {
+            gridPane.add(createButton(x, y, shipActionHandler, player), x, y, x, y)
+          }
+        }
+      }
+    }
+    gridPane
+  }
+
+  private def createButton(x: Int, y: Int, actonHandler: ShipActionHandler, player: Player): Button = {
+
+    var shipButton = new Button("-")
+    val ship = new Ship(1)
+
+    shipButton.onAction = (even: ActionEvent) => {
+      if (actonHandler.getShipPlaceAction(x, y, ship, Orientation.HORIZONTAL, player)) {
+        this.playerSwitch(this.selectPlayer(player))
+      }
+    }
+    shipButton
+  }
+
+  private def createShip(xCord: Int, yCord: Int): Rectangle = {
+    new Rectangle {
+      x = xCord
+      y = yCord
+      width = 10
+      height = 10
+      fill = SandyBrown
+    }
+  }
+
+  private def createText(content: String): Text = {
+    new Text {
+      text = content
+      style = "-fx-font-size: 12pt;"
+      fill = new LinearGradient(
+        endX = 0,
+        stops = Stops(White, WhiteSmoke)
+      )
+    }
+  }
+
+  private def selectPlayer(player: Player): Player = {
+    if (player.COLOR.equals(controller.player1Color)) {
+      return controller.player2
+    }
+    controller.player1
+  }
 }

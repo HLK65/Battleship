@@ -7,11 +7,11 @@ import scalafx.event.ActionEvent
 
 case class ShipActionHandler(controller: Controller) {
 
-  def getShipPlaceAction(x: Int, y: Int, ship: Ship, orientation: Orientation, player: Player): Unit = {
+  def getShipPlaceAction(x: Int, y: Int, ship: Ship, orientation: Orientation, player: Player): Boolean = {
 
     controller.placeShip(player, new Point(x, y), ship.SIZE, orientation)
   }
-  def getShipHitAction(player: Player, x: Int, y: Int): Unit = {
+  def getShipHitAction(player: Player, x: Int, y: Int): String = {
 
     controller.hitShip(player, new Point(x, y))
   }
