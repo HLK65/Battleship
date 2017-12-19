@@ -71,7 +71,7 @@ object GuiView extends JFXApp with View {
 
   override def playerSwitch(player: Player): Unit = {
     player.field.placeShip(new Point(1, 1), 2, Orientation.VERTICAL.toString)
-    stage = FieldStage.printField(player)
+    stage = FieldStage.printField(player, true, controller)
   }
 
   override def printField(field: Field, color: String): Unit = ???

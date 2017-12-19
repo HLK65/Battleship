@@ -1,6 +1,8 @@
 package de.htwg.se.battleship.view.stages
 
-import de.htwg.se.battleship.model.{ Field, Player, Point }
+import de.htwg.se.battleship.controller.Controller
+import de.htwg.se.battleship.model.handler.ShipActionHandler
+import de.htwg.se.battleship.model._
 
 import scalafx.Includes._
 import scalafx.application.JFXApp
@@ -17,13 +19,15 @@ import scalafx.scene.text.Text
 
 object FieldStage extends JFXApp {
 
-  def printField(player: Player): PrimaryStage = {
+  def printField(player: Player, placeTurn: Boolean, controller: Controller): PrimaryStage = {
 
     val field = player.field
-    createStage(player, createFieldGrid(field))
+    createStage(player, createFieldGrid(field, placeTurn, controller, player))
   }
 
-  def createFieldGrid(field: Field): GridPane = {
+  def createFieldGrid(field: Field, placeTurn: Boolean, controller: Controller, player: Player): GridPane = {
+    val shipActionHandler = new ShipActionHandler(controller)
+
     var gridPane = new GridPane {
       hgap = 25
       vgap = 15
@@ -40,11 +44,24 @@ object FieldStage extends JFXApp {
         } else if (field.hasShip(Point(x, y))) {
           gridPane.add(createShip(x, y), x, y, x, y)
         } else {
-          gridPane.add(createText("-"), x, y, x, y)
+          if (placeTurn) {
+            gridPane.add(createButton(x, y, shipActionHandler, player), x, y, x, y)
+          }
         }
       }
     }
     gridPane
+  }
+
+  private def createButton(x: Int, y: Int, actonHandler: ShipActionHandler, player: Player): Button = {
+
+    var shipButton = new Button("-")
+    val ship = new Ship(1)
+
+    shipButton.onAction = (even: ActionEvent) => {
+      actonHandler.getShipPlaceAction(x, y, ship, Orientation.HORIZONTAL, player)
+    }
+    shipButton
   }
 
   private def createShip(xCord: Int, yCord: Int): Rectangle = {
@@ -53,7 +70,7 @@ object FieldStage extends JFXApp {
       y = yCord
       width = 10
       height = 10
-      fill = Green
+      fill = SandyBrown
     }
   }
 
