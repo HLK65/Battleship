@@ -20,6 +20,7 @@ import scalafx.scene.text.Text
 
 object GuiView extends JFXApp with View {
 
+  var shipSelection = new ShipSelection(-1, Orientation.HORIZONTAL)
   val args: Array[String] = new Array[String](1)
   val readyButton = new Button("Ready")
   //TODO Replace this shit with controller interface
@@ -120,16 +121,48 @@ object GuiView extends JFXApp with View {
         }
       }
     }
+    if (placeTurn) {
+      createShipSelection(gridPane, player, field.size)
+    }
     gridPane
+  }
+
+  private def createShipSelection(gridPane: GridPane, player: Player, x: Int): Unit = {
+
+    var placeGrid = new GridPane {
+      hgap = 25
+      vgap = 15
+      padding = Insets(20)
+    }
+    placeGrid.style = "-fx-background-color:grey"
+    placeGrid.add(this.createText("Place Ships"), 1, 0)
+    val shipText = this.createText("")
+    placeGrid.add(shipText, 1, 1)
+    for ((key, ship) <- player.shipInventory) {
+
+      var button = new Button(ship + " sized H")
+      button.onAction = (event: ActionEvent) => {
+        shipSelection = new ShipSelection(ship, Orientation.HORIZONTAL)
+        shipText.text = ship + "sized ship Selected"
+      }
+      placeGrid.add(button, key, 1)
+      var vButton = new Button(ship + " sized V")
+      placeGrid.add(vButton, key, 2)
+      vButton.onAction = (event: ActionEvent) => {
+        shipSelection = new ShipSelection(ship, Orientation.VERTICAL)
+        shipText.text = ship + "sized ship Selected"
+      }
+    }
+    gridPane.add(placeGrid, x + 2, 1)
   }
 
   private def createButton(x: Int, y: Int, actonHandler: ShipActionHandler, player: Player): Button = {
 
     var shipButton = new Button("-")
-    val ship = new Ship(1)
 
     shipButton.onAction = (even: ActionEvent) => {
-      if (actonHandler.getShipPlaceAction(x, y, ship, Orientation.HORIZONTAL, player)) {
+      val ship = new Ship(shipSelection.size)
+      if (actonHandler.getShipPlaceAction(x, y, ship, shipSelection.orientation, player)) {
         this.playerSwitch(this.selectPlayer(player))
       }
     }

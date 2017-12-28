@@ -9,6 +9,11 @@ case class ShipActionHandler(controller: Controller) {
 
   def getShipPlaceAction(x: Int, y: Int, ship: Ship, orientation: Orientation, player: Player): Boolean = {
 
+    if (ship.SIZE < 0) {
+      return false
+    }
+
+    //TODO remove the ship from inventory
     controller.placeShip(player, new Point(x, y), ship.SIZE, orientation)
   }
   def getShipHitAction(player: Player, x: Int, y: Int): String = {
@@ -16,3 +21,4 @@ case class ShipActionHandler(controller: Controller) {
     controller.hitShip(player, new Point(x, y))
   }
 }
+

@@ -1,7 +1,7 @@
 package de.htwg.se.battleship.controller
 
 import de.htwg.se.battleship.model.{ Field, Orientation, Player, Point }
-import de.htwg.se.battleship.view.{ GuiView, ScalaFxDemo, View }
+import de.htwg.se.battleship.view.{ GuiView, View }
 
 case class Controller(fieldSize: Int, view: View) {
 
