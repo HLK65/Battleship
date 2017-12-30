@@ -117,8 +117,8 @@ object GuiView extends JFXApp with View {
         } else {
           if (placeTurn) {
             gridPane.add(createButton(x, y, shipActionHandler, player), x, y, x, y)
-          }else{
-            gridPane.add(createHitButton(x, y, shipActionHandler, player), x,y,x,y)
+          } else {
+            gridPane.add(createHitButton(x, y, shipActionHandler, player), x, y, x, y)
           }
         }
       }
@@ -129,12 +129,12 @@ object GuiView extends JFXApp with View {
     gridPane
   }
 
-  private def createHitButton(x: Int, y: Int, actonHandler: ShipActionHandler, player: Player): Button={
+  private def createHitButton(x: Int, y: Int, actonHandler: ShipActionHandler, player: Player): Button = {
     var button = new Button("X")
     button.onAction = (even: ActionEvent) => {
       actonHandler.getShipHitAction(player, x, y)
     }
-
+    button
   }
 
   private def createShipSelection(gridPane: GridPane, player: Player, x: Int): Unit = {
