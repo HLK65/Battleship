@@ -58,15 +58,13 @@ class TuiView extends View {
 
   override def selectShip(player: Player): Int = {
     //show player what ships he still has to place
-    println("Ships you can place" + player.shipInventory.toString())
+    println("Ships you can place: " + player.shipInventory.toString() + " [Size -> Amount]")
     //read what kind of ship the player wanted to place
     println("Select size of the ship you want to place")
-    val inputSize = scala.io.StdIn.readInt()
-    inputSize
+    scala.io.StdIn.readInt()
   }
 
   override def readPoint(): Point = {
-
     println("Select Point. x then y")
     val pointInputX = scala.io.StdIn.readInt()
     val pointInputY = scala.io.StdIn.readInt()
@@ -75,9 +73,7 @@ class TuiView extends View {
   }
 
   override def readOrientation(): Int = {
-
     println("Choose orientation. 1 horizontal, else vertical")
-    val inputOrientation = scala.io.StdIn.readInt()
-    inputOrientation
+    scala.io.StdIn.readInt()
   }
 }
