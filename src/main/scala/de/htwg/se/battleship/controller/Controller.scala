@@ -1,17 +1,22 @@
 package de.htwg.se.battleship.controller
 
-import akka.actor.{Actor, Props}
+import akka.actor.{Actor, ActorRef, Props}
+import de.htwg.se.battleship.model.Akka._
 import de.htwg.se.battleship.model.{Field, Orientation, Player, Point}
-import de.htwg.se.battleship.view.{TuiView, View}
 
 object Controller {
-  def props(fieldSize: Int): Props = Props(new Controller(fieldSize, new TuiView()))
+  def props(fieldSize: Int): Props = Props(new Controller(fieldSize))
 }
 
-case class Controller(fieldSize: Int, view: View) extends Actor {
+case class Controller(fieldSize: Int) extends Actor {
+
+  private val observers = scala.collection.mutable.SortedSet.empty[ActorRef]
 
   override def receive: Receive = {
     case "helloWorld" => gameStart()
+    case RegisterObserver => observers += sender(); sender() ! "currentState" /*todo*/ ; sender()
+    case UnregisterObserver => observers -= sender()
+
   } //todo
 
   val player1Color = "Red"
@@ -37,10 +42,10 @@ case class Controller(fieldSize: Int, view: View) extends Actor {
   def gameStart() = {
     /*GuiView.controller = this
     GuiView.startGame*/
-    view.startGame
+    observers.foreach(_ ! StartGame) //view.startGame
     placeShipTurn(player1, player2)
     val winner = shootShipTurn(player1, player2)
-    view.announceWinner(winner.COLOR)
+    observers.foreach(_ ! AnnounceWinner(winner.COLOR)) //view.announceWinner(winner.COLOR)
   }
 
   /*
@@ -48,7 +53,7 @@ case class Controller(fieldSize: Int, view: View) extends Actor {
    winning player is returned
   */
   def shootShipTurn(player: Player, nextPlayer: Player): Player = {
-    view.playerSwitch(player)
+    observers.foreach(_ ! PlayerSwitch(player)) //view.playerSwitch(player)
 
     var point = view.shootTurn()
     view.printMessage(nextPlayer.field.hitField(point))
@@ -61,13 +66,13 @@ case class Controller(fieldSize: Int, view: View) extends Actor {
   def placeShipTurn(player: Player, nextPlayer: Player): Unit = {
     //check if the player still has ships to place
     if (player.shipInventory.size > 0) {
-      view.playerSwitch(player)
+      observers.foreach(_ ! PlayerSwitch(player)) //view.playerSwitch(player)
 
-      view.printField(player.field, player.COLOR)
+      observers.foreach(_ ! PrintField(player.field, player.COLOR)) //view.printField(player.field, player.COLOR)
 
       val inputSize = view.selectShip(player)
       if (!player.shipInventory.contains(inputSize)) {
-        view.printMessage("Invalid inputSize, try again")
+        observers.foreach(_ ! PrintMessage("Invalid inputSize, try again")) //view.printMessage("Invalid inputSize, try again")
         placeShipTurn(player, nextPlayer)
         return
       }
@@ -81,15 +86,15 @@ case class Controller(fieldSize: Int, view: View) extends Actor {
         val shipsOfShipsizeLeft = player.shipInventory(inputSize).toInt.-(1)
         player.shipInventory(inputSize) = shipsOfShipsizeLeft
         if (shipsOfShipsizeLeft <= 0) player.shipInventory.remove(inputSize)
-        view.printMessage("Ship placed")
+        observers.foreach(_ ! PrintMessage("Ship placed")) //view.printMessage("Ship placed")
         placeShipTurn(nextPlayer, player)
       } else {
-        view.printMessage("Can´t place ship there, try again \n ###################################### \n")
+        observers.foreach(_ ! PrintMessage("Can´t place ship there, try again \\n ###################################### \\n")) //view.printMessage("Can´t place ship there, try again \n ###################################### \n")
         placeShipTurn(player, nextPlayer)
       }
     } else {
       //todo
-      view.printMessage("all ships placed")
+      observers.foreach(_ ! PrintMessage("all ships placed")) //view.printMessage("all ships placed")
     }
   }
 
