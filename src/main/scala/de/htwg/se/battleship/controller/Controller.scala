@@ -1,9 +1,10 @@
 package de.htwg.se.battleship.controller
 
-import de.htwg.se.battleship.model.{ Field, Orientation, Player, Point }
-import de.htwg.se.battleship.view.{ GuiView, View }
+import akka.actor.Actor
+import de.htwg.se.battleship.model.{Field, Orientation, Player, Point}
+import de.htwg.se.battleship.view.View
 
-case class Controller(fieldSize: Int, view: View) {
+case class Controller(fieldSize: Int, view: View) extends Actor { //todo make object
 
   val player1Color = "Red"
   val player2Color = "Blue"
@@ -12,7 +13,7 @@ case class Controller(fieldSize: Int, view: View) {
   val field2 = Field(fieldSize)
 
   //1x5Felder, 2x4Felder, 3x3Felder, 4x2Felder
-  val shipInventory: scala.collection.mutable.Map[ /*size*/ Int, /*amount*/ Int] = scala.collection.mutable.Map( /*5 -> 1, 4 -> 2, 3 -> 3, */ 2 -> 1)
+  val shipInventory: scala.collection.mutable.Map[ /*size*/ Int, /*amount*/ Int] = scala.collection.mutable.Map(/*5 -> 1, 4 -> 2, 3 -> 3, */ 2 -> 1)
 
   val player1 = Player(player1Color, field1, shipInventory.clone())
   val player2 = Player(player2Color, field2, shipInventory.clone())
@@ -26,13 +27,12 @@ case class Controller(fieldSize: Int, view: View) {
   }
 
   def gameStart() = {
+    /*GuiView.controller = this
+    GuiView.startGame*/
     view.startGame
-    GuiView.controller = this
-    GuiView.startGame
-    /* placeShipTurn(player1, player2)
+    placeShipTurn(player1, player2)
     val winner = shootShipTurn(player1, player2)
     view.announceWinner(winner.COLOR)
-*/
   }
 
   /*
@@ -48,7 +48,6 @@ case class Controller(fieldSize: Int, view: View) {
     if (nextPlayer.field.fieldGrid.isEmpty) return player //return winning player
 
     shootShipTurn(nextPlayer, player)
-
   }
 
   def placeShipTurn(player: Player, nextPlayer: Player): Unit = {
@@ -86,4 +85,5 @@ case class Controller(fieldSize: Int, view: View) {
     }
   }
 
+  override def receive: Receive = ??? //todo
 }

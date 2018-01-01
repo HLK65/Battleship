@@ -1,8 +1,9 @@
 package de.htwg.se.battleship.view
 
-import de.htwg.se.battleship.model.{ Field, Player, Point }
+import akka.actor.Actor
+import de.htwg.se.battleship.model.{Field, Player, Point}
 
-trait View {
+trait View extends Actor {
 
   def startGame: Unit
   def announceWinner(color: String): Unit

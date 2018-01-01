@@ -2,7 +2,9 @@ package de.htwg.se.battleship.view
 
 import de.htwg.se.battleship.model._
 
-class TuiView extends View {
+object TuiView extends View {
+
+  override def receive: Receive = ??? //todo
 
   override def startGame: Unit = {
     println("Game starts")
@@ -76,4 +78,5 @@ class TuiView extends View {
     println("Choose orientation. 1 horizontal, else vertical")
     scala.io.StdIn.readInt()
   }
+
 }
