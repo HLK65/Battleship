@@ -11,10 +11,12 @@ libraryDependencies ++= {
   val scalaMockV = "3.2.2"
   val scalaFxV = "8.0.92-R10"
   val akkaV = "2.5.3"
+  val configV = "1.3.1"
 
   Seq(
     "com.typesafe.akka" %% "akka-actor" % akkaV,
     "com.typesafe.akka" %% "akka-testkit" % akkaV,
+    "com.typesafe" % "config" % configV,
     "org.scalatest" %% "scalatest" % scalaTestV % "test",
     "org.scalamock" %% "scalamock-scalatest-support" % scalaMockV % "test",
     "org.scalafx" %% "scalafx" % scalaFxV
