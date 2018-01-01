@@ -1,10 +1,18 @@
 package de.htwg.se.battleship.controller
 
-import akka.actor.Actor
+import akka.actor.{Actor, Props}
 import de.htwg.se.battleship.model.{Field, Orientation, Player, Point}
-import de.htwg.se.battleship.view.View
+import de.htwg.se.battleship.view.{TuiView, View}
 
-case class Controller(fieldSize: Int, view: View) extends Actor { //todo make object
+object Controller {
+  def props(fieldSize: Int): Props = Props(new Controller(fieldSize, new TuiView()))
+}
+
+case class Controller(fieldSize: Int, view: View) extends Actor {
+
+  override def receive: Receive = {
+    case "helloWorld" => gameStart()
+  } //todo
 
   val player1Color = "Red"
   val player2Color = "Blue"
@@ -85,5 +93,4 @@ case class Controller(fieldSize: Int, view: View) extends Actor { //todo make ob
     }
   }
 
-  override def receive: Receive = ??? //todo
 }

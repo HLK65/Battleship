@@ -1,3 +1,4 @@
+/*
 package de.htwg.se.battleship.view
 
 import de.htwg.se.battleship.controller.Controller
@@ -206,4 +207,4 @@ object GuiView extends JFXApp with View {
     }
     controller.player1
   }
-}
+}*/

@@ -1,3 +1,4 @@
+/*
 package de.htwg.se.battleship.view.stages
 
 import de.htwg.se.battleship.controller.Controller
@@ -33,4 +34,4 @@ object FieldStage extends JFXApp {
     stage
   }
 
-}
+}*/

@@ -2,9 +2,9 @@ package de.htwg.se.battleship.view
 
 import de.htwg.se.battleship.model._
 
-object TuiView extends View {
+class TuiView(/*val controller: ActorRef*/) extends View {
 
-  override def receive: Receive = ??? //todo
+  //  override def receive: Receive = ??? //todo
 
   override def startGame: Unit = {
     println("Game starts")

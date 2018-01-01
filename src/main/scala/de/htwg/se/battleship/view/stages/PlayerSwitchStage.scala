@@ -1,3 +1,4 @@
+/*
 package de.htwg.se.battleship.view.stages
 
 import de.htwg.se.battleship.model._
@@ -47,4 +48,4 @@ object PlayerSwitchStage extends JFXApp {
     stage
   }
 
-}
+}*/

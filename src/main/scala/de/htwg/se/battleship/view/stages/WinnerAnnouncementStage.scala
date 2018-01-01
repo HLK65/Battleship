@@ -1,3 +1,4 @@
+/*
 package de.htwg.se.battleship.view.stages
 
 import scalafx.Includes._
@@ -55,4 +56,4 @@ object WinnerAnnouncementStage extends JFXApp {
     }
     //    stage.show()
   }
-}
+}*/
