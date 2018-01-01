@@ -10,8 +10,9 @@ libraryDependencies ++= {
   val scalaTestV = "3.0.0-M15"
   val scalaMockV = "3.2.2"
   val scalaFxV = "8.0.92-R10"
+  val configV = "1.3.1"
 
-  Seq(
+  Seq("com.typesafe" % "config" % configV,
     "org.scalatest" %% "scalatest" % scalaTestV % "test",
     "org.scalamock" %% "scalamock-scalatest-support" % scalaMockV % "test",
     "org.scalafx" %% "scalafx" % scalaFxV
