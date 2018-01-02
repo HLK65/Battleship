@@ -14,10 +14,10 @@ case class Controller(fieldSize: Int) extends Actor {
 
   override def receive: Receive = {
     case "helloWorld" => gameStart()
-    case RegisterObserver => observers += sender(); sender() ! "currentState" /*todo*/ ; sender()
+    case RegisterObserver => observers += sender(); sender() ! "currentState" /*todo*/
     case UnregisterObserver => observers -= sender()
 
-  } //todo
+  } //todo lukas akka receiver
 
   val player1Color = "Red"
   val player2Color = "Blue"
@@ -55,8 +55,8 @@ case class Controller(fieldSize: Int) extends Actor {
   def shootShipTurn(player: Player, nextPlayer: Player): Player = {
     observers.foreach(_ ! PlayerSwitch(player)) //view.playerSwitch(player)
 
-    var point = view.shootTurn()
-    view.printMessage(nextPlayer.field.hitField(point))
+    //    var point = view.shootTurn() todo lukas akka
+    //    view.printMessage(nextPlayer.field.hitField(point)) todo lukas akka
 
     if (nextPlayer.field.fieldGrid.isEmpty) return player //return winning player
 
@@ -70,28 +70,28 @@ case class Controller(fieldSize: Int) extends Actor {
 
       observers.foreach(_ ! PrintField(player.field, player.COLOR)) //view.printField(player.field, player.COLOR)
 
-      val inputSize = view.selectShip(player)
+      /*val inputSize = view.selectShip(player) todo lukas akka
       if (!player.shipInventory.contains(inputSize)) {
         observers.foreach(_ ! PrintMessage("Invalid inputSize, try again")) //view.printMessage("Invalid inputSize, try again")
         placeShipTurn(player, nextPlayer)
         return
-      }
+      }*/
 
       //read Point
-      val point = view.readPoint()
-      val inputOrientation = view.readOrientation()
+      /* val point = view.readPoint() todo lukas akka
+       val inputOrientation = view.readOrientation()
 
-      if (placeShip(player, point, inputSize, if (inputOrientation == 1) Orientation.HORIZONTAL else Orientation.VERTICAL)) {
-        //remove ship from inventory
-        val shipsOfShipsizeLeft = player.shipInventory(inputSize).toInt.-(1)
-        player.shipInventory(inputSize) = shipsOfShipsizeLeft
-        if (shipsOfShipsizeLeft <= 0) player.shipInventory.remove(inputSize)
-        observers.foreach(_ ! PrintMessage("Ship placed")) //view.printMessage("Ship placed")
-        placeShipTurn(nextPlayer, player)
-      } else {
-        observers.foreach(_ ! PrintMessage("Can´t place ship there, try again \\n ###################################### \\n")) //view.printMessage("Can´t place ship there, try again \n ###################################### \n")
-        placeShipTurn(player, nextPlayer)
-      }
+       if (placeShip(player, point, inputSize, if (inputOrientation == 1) Orientation.HORIZONTAL else Orientation.VERTICAL)) {
+         //remove ship from inventory
+         val shipsOfShipsizeLeft = player.shipInventory(inputSize).toInt.-(1)
+         player.shipInventory(inputSize) = shipsOfShipsizeLeft
+         if (shipsOfShipsizeLeft <= 0) player.shipInventory.remove(inputSize)
+         observers.foreach(_ ! PrintMessage("Ship placed")) //view.printMessage("Ship placed")
+         placeShipTurn(nextPlayer, player)
+       } else {
+         observers.foreach(_ ! PrintMessage("Can´t place ship there, try again \\n ###################################### \\n")) //view.printMessage("Can´t place ship there, try again \n ###################################### \n")
+         placeShipTurn(player, nextPlayer)
+       }*/
     } else {
       //todo
       observers.foreach(_ ! PrintMessage("all ships placed")) //view.printMessage("all ships placed")

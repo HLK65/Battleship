@@ -12,7 +12,7 @@ object Akka {
 
   case class PlaceShipTurn(player1: Player, player2: Player)
 
-  case class AnnounceWinner(winnerColor: _) //todo color instead of _
+  case class AnnounceWinner(winnerColor: String) //todo color instead of String
   case class PlayerSwitch(player: Player)
 
   case class PrintMessage(message: String)

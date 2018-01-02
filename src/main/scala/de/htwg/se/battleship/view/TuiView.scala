@@ -1,7 +1,7 @@
 package de.htwg.se.battleship.view
 
 import akka.actor.ActorRef
-import de.htwg.se.battleship.model.Akka.RegisterObserver
+import de.htwg.se.battleship.model.Akka._
 import de.htwg.se.battleship.model._
 
 class TuiView(val controller: ActorRef) extends View {
@@ -9,7 +9,10 @@ class TuiView(val controller: ActorRef) extends View {
   controller ! RegisterObserver
 
   override def receive: Receive = {
-    case "startGame" => startGame
+    case StartGame => startGame
+    case AnnounceWinner(winnerColor: String) => announceWinner(winnerColor)
+    case PrintField(field: Field, color: String) => printField(field, color)
+
   } //todo
 
   override def startGame: Unit = {
