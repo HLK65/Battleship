@@ -11,7 +11,6 @@ object Controller {
 case class Controller(fieldSize: Int) extends Actor {
 
   private val observers = scala.collection.mutable.SortedSet.empty[ActorRef]
-  var state = Update(PlaceShipTurn, player1, player2)
 
   val player1Color = "Red"
   val player2Color = "Blue"
@@ -25,6 +24,7 @@ case class Controller(fieldSize: Int) extends Actor {
   val player1 = Player(player1Color, field1, shipInventory.clone())
   val player2 = Player(player2Color, field2, shipInventory.clone())
 
+  var state = Update(PlaceShipTurn, player1, player2)
 
   override def receive: Receive = {
     case StartGame => gameStart()
@@ -47,86 +47,47 @@ case class Controller(fieldSize: Int) extends Actor {
         sender() ! PrintMessage("Player is not allowed to shoot at the moment")
         sender() ! state
       }
-
   }
 
-
-  def placeShip(player: Player, startPoint: Point, shipSize: Int, orientation: Orientation) = {
-    if (player.field.placeShip(startPoint, shipSize, orientation.toString)) {
-      //update, players switched todo
-    } else {
-      //msg + try again todo
-    }
-  }
-
-  def hitShip(playerToHit: Player, pointToHit: Point) = {
-    observers.foreach(_ ! PrintMessage(playerToHit.field.hitField(pointToHit)))
-    //update todo
-  }
-
-  def gameStart() = {
-    /*GuiView.controller = this
-    GuiView.startGame*/
-    //    observers.foreach(_ ! StartGame) //view.startGame
-
+  def gameStart(): Unit = {
     placeShipTurn(player1, player2)
-
-    shootShipTurn(player1, player2)
   }
 
   def placeShipTurn(player: Player, nextPlayer: Player): Unit = {
     //check if the player still has ships to place
-    if (player.shipInventory.size > 0) {
-      observers.foreach(_ ! PlayerSwitch(player)) //view.playerSwitch(player)
-
-      observers.foreach(_ ! PrintField(player.field, player.COLOR)) //view.printField(player.field, player.COLOR)
-
-      /*val inputSize = view.selectShip(player) todo lukas akka
-      if (!player.shipInventory.contains(inputSize)) {
-        observers.foreach(_ ! PrintMessage("Invalid inputSize, try again")) //view.printMessage("Invalid inputSize, try again")
-        placeShipTurn(player, nextPlayer)
-        return
-      }*/
-
-      //read Point
-      /* val point = view.readPoint() todo lukas akka
-       val inputOrientation = view.readOrientation()
-
-       if (placeShip(player, point, inputSize, if (inputOrientation == 1) Orientation.HORIZONTAL else Orientation.VERTICAL)) {
-         //remove ship from inventory
-         val shipsOfShipsizeLeft = player.shipInventory(inputSize).toInt.-(1)
-         player.shipInventory(inputSize) = shipsOfShipsizeLeft
-         if (shipsOfShipsizeLeft <= 0) player.shipInventory.remove(inputSize)
-         observers.foreach(_ ! PrintMessage("Ship placed")) //view.printMessage("Ship placed")
-         placeShipTurn(nextPlayer, player)
-       } else {
-         observers.foreach(_ ! PrintMessage("Can´t place ship there, try again \\n ###################################### \\n")) //view.printMessage("Can´t place ship there, try again \n ###################################### \n")
-         placeShipTurn(player, nextPlayer)
-       }*/
+    if (player.shipInventory.nonEmpty) {
+      state = Update(PlaceShipTurn, player, nextPlayer)
+      observers.foreach(_ ! state)
     } else {
-      //todo
       observers.foreach(_ ! PrintMessage("all ships placed")) //view.printMessage("all ships placed")
+      shootShipTurn(player, nextPlayer)
     }
   }
 
-  /*
-   recursively called method to shoot other players ship until only one player got ships left
-   winning player is returned
-  */
+  def placeShip(player: Player, startPoint: Point, shipSize: Int, orientation: Orientation): Unit = {
+    if (player.field.placeShip(startPoint, shipSize, orientation.toString)) {
+      observers.foreach(_ ! "Ship placed")
+      placeShipTurn(state.otherPlayer, state.activePlayer)
+    } else {
+      observers.foreach(_ ! "placing ship failed")
+      observers.foreach(_ ! state)
+    }
+  }
+
   def shootShipTurn(player: Player, nextPlayer: Player): Unit = {
-    observers.foreach(_ ! PlayerSwitch(player)) //view.playerSwitch(player)
-    observers.foreach(_ ! ShootTurn)
-
-    //    var point = view.shootTurn() todo lukas akka
-    //    view.printMessage(nextPlayer.field.hitField(point)) todo lukas akka
-
-    if (nextPlayer.field.fieldGrid.isEmpty) {
+    if (nextPlayer.field.fieldGrid.nonEmpty) {
+      state = Update(ShootTurn, player, nextPlayer)
+      observers.foreach(_ ! state)
+    } else {
       state = Update(AnnounceWinner, player, null) //view.announceWinner(winner.COLOR)
       observers.foreach(_ ! state)
-      return
     }
-
-    shootShipTurn(nextPlayer, player)
   }
 
+  def hitShip(playerToHit: Player, pointToHit: Point): Unit = {
+    observers.foreach(_ ! PrintMessage(playerToHit.field.hitField(pointToHit)))
+    shootShipTurn(state.otherPlayer, state.activePlayer)
+  }
 }
+
+

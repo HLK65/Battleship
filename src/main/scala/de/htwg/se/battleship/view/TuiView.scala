@@ -9,17 +9,14 @@ class TuiView(val controller: ActorRef) extends View {
   controller ! RegisterObserver
 
   override def receive: Receive = {
-    /*  case StartGame => startGame
-      case AnnounceWinner(winnerColor: String) => announceWinner(winnerColor)
-      case PrintField(field: Field, color: String) => printField(field, color)
-      case ShootTurn =>*/
     case Update(state: _, activePlayer: Player, otherPlayer: Player) => update(state, activePlayer, otherPlayer)
+    case PrintMessage(message: String) => println(Console.BLACK + message)
 
   } //todo
 
   def update(state: _, activePlayer: Player, otherPlayer: Player): Unit = {
     state match {
-      case PlaceShipTurn =>
+      case PlaceShipTurn => println("partytime") //todo
     }
   }
 
