@@ -24,7 +24,7 @@ case class Controller(fieldSize: Int) extends Actor {
   val player1 = Player(player1Color, field1, shipInventory.clone())
   val player2 = Player(player2Color, field2, shipInventory.clone())
 
-  var state = Update(PlaceShipTurn, player1, player2)
+  var state = Update(MyEnum.PlaceShipTurn, player1, player2)
 
   override def receive: Receive = {
     case StartGame => gameStart()
@@ -56,7 +56,7 @@ case class Controller(fieldSize: Int) extends Actor {
   def placeShipTurn(player: Player, nextPlayer: Player): Unit = {
     //check if the player still has ships to place
     if (player.shipInventory.nonEmpty) {
-      state = Update(PlaceShipTurn, player, nextPlayer)
+      state = Update(MyEnum.PlaceShipTurn, player, nextPlayer)
       observers.foreach(_ ! state)
     } else {
       observers.foreach(_ ! PrintMessage("all ships placed")) //view.printMessage("all ships placed")
@@ -76,10 +76,10 @@ case class Controller(fieldSize: Int) extends Actor {
 
   def shootShipTurn(player: Player, nextPlayer: Player): Unit = {
     if (nextPlayer.field.fieldGrid.nonEmpty) {
-      state = Update(ShootTurn, player, nextPlayer)
+      state = Update(MyEnum.ShootTurn, player, nextPlayer)
       observers.foreach(_ ! state)
     } else {
-      state = Update(AnnounceWinner, player, null) //view.announceWinner(winner.COLOR)
+      state = Update(MyEnum.AnnounceWinner, player, null) //view.announceWinner(winner.COLOR)
       observers.foreach(_ ! state)
     }
   }

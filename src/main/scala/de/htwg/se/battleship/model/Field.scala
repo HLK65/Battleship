@@ -15,10 +15,10 @@ case class Field(size: Int) {
       if (ship.hitPoints == 0) {
         ship.SIZE + " sunk"
       } else {
-        return "hit ship"
+        "hit ship"
       }
     } else {
-      return hitShip
+      hitShip
     }
   }
 

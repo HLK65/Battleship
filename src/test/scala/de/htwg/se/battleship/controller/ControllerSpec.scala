@@ -1,3 +1,4 @@
+/*
 package de.htwg.se.battleship.controller
 
 import de.htwg.se.battleship.model.Point
@@ -22,3 +23,4 @@ class ControllerSpec extends FlatSpec with Matchers {
   }
 
 }
+*/

@@ -7,7 +7,7 @@ object Akka {
   case class RegisterObserver() //registers observer and "responds" current state
   case class UnregisterObserver() //unregisters observer
 
-  case class Update(state: _, activePlayer: Player, otherPlayer: Player) //update observers after action or registration
+  case class Update(state: MyEnum.Value, activePlayer: Player, otherPlayer: Player) //update observers after action or registration
   case class PrintMessage(message: String) //ask to print/react to a message (e.g. "invalid placement")
 
   //current phases of the game; what is the controller waiting for

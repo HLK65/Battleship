@@ -1,3 +1,4 @@
+/*
 package de.htwg.se.battleship.model.handler
 
 import de.htwg.se.battleship.controller.Controller
@@ -22,3 +23,4 @@ case class ShipActionHandler(controller: Controller) {
   }
 }
 
+*/
