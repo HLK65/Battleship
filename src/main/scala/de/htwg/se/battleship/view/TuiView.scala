@@ -9,14 +9,29 @@ class TuiView(val controller: ActorRef) extends View {
   controller ! RegisterObserver
 
   override def receive: Receive = {
-    case StartGame => startGame
-    case AnnounceWinner(winnerColor: String) => announceWinner(winnerColor)
-    case PrintField(field: Field, color: String) => printField(field, color)
+    /*  case StartGame => startGame
+      case AnnounceWinner(winnerColor: String) => announceWinner(winnerColor)
+      case PrintField(field: Field, color: String) => printField(field, color)
+      case ShootTurn =>*/
+    case Update(state: _, activePlayer: Player, otherPlayer: Player) => update(state, activePlayer, otherPlayer)
 
   } //todo
 
-  override def startGame: Unit = {
+  def update(state: _, activePlayer: Player, otherPlayer: Player): Unit = {
+    state match {
+      case PlaceShipTurn =>
+    }
+  }
+
+  override def startGame: Unit = { //todo brauchts nicht
     println("Game starts")
+  }
+
+  def placeShip(player: Player): Unit = {
+    val size = selectShip(player)
+    val point = readPoint()
+    val orientation = readOrientation()
+    controller ! PlaceShip(player, point, size, orientation)
   }
 
   override def announceWinner(color: String): Unit = {
@@ -63,9 +78,12 @@ class TuiView(val controller: ActorRef) extends View {
     println()
   }
 
-  override def printMessage(message: String): Unit = {
-    print(message)
+  override def readOrientation(): Orientation = {
+    println("Choose orientation. 1 horizontal, else vertical")
+    if (scala.io.StdIn.readInt() == 1) Orientation.HORIZONTAL
+    else Orientation.VERTICAL
   }
+
 
   override def selectShip(player: Player): Int = {
     //show player what ships he still has to place
@@ -83,9 +101,8 @@ class TuiView(val controller: ActorRef) extends View {
     point
   }
 
-  override def readOrientation(): Int = {
-    println("Choose orientation. 1 horizontal, else vertical")
-    scala.io.StdIn.readInt()
+  override def printMessage(message: String): Unit = {
+    println(message)
   }
 
 }

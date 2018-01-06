@@ -3,6 +3,7 @@ package de.htwg.se.battleship
 import akka.actor.{ActorSystem, Props}
 import com.typesafe.config.ConfigFactory
 import de.htwg.se.battleship.controller.Controller
+import de.htwg.se.battleship.model.Akka.StartGame
 import de.htwg.se.battleship.view.TuiView
 
 object Battleship {
@@ -14,7 +15,7 @@ object Battleship {
     val controller = actorSystem.actorOf(Controller.props(fieldSize), controllerActorName)
     val tui = actorSystem.actorOf(Props(new TuiView(controller)))
 
-    controller.tell("helloWorld", null)
+    controller.tell(StartGame, null)
 
   }
 

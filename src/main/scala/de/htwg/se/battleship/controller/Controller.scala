@@ -2,7 +2,7 @@ package de.htwg.se.battleship.controller
 
 import akka.actor.{Actor, ActorRef, Props}
 import de.htwg.se.battleship.model.Akka._
-import de.htwg.se.battleship.model.{Field, Orientation, Player, Point}
+import de.htwg.se.battleship.model._
 
 object Controller {
   def props(fieldSize: Int): Props = Props(new Controller(fieldSize))
@@ -11,13 +11,7 @@ object Controller {
 case class Controller(fieldSize: Int) extends Actor {
 
   private val observers = scala.collection.mutable.SortedSet.empty[ActorRef]
-
-  override def receive: Receive = {
-    case "helloWorld" => gameStart()
-    case RegisterObserver => observers += sender(); sender() ! "currentState" /*todo*/
-    case UnregisterObserver => observers -= sender()
-
-  } //todo lukas akka receiver
+  var state = Update(PlaceShipTurn, player1, player2)
 
   val player1Color = "Red"
   val player2Color = "Blue"
@@ -31,36 +25,53 @@ case class Controller(fieldSize: Int) extends Actor {
   val player1 = Player(player1Color, field1, shipInventory.clone())
   val player2 = Player(player2Color, field2, shipInventory.clone())
 
-  def placeShip(player: Player, startPoint: Point, shipSize: Int, orientation: Orientation): Boolean = {
-    player.field.placeShip(startPoint, shipSize, orientation.toString)
+
+  override def receive: Receive = {
+    case StartGame => gameStart()
+    case RegisterObserver => observers += sender(); sender() ! state
+    case UnregisterObserver => observers -= sender()
+
+    case PlaceShip(player: Player, startPoint: Point, shipSize: Int, orientation: Orientation) =>
+      if (state.state.equals(PlaceShipTurn) /*getClass.getTypeName.equals(PlaceShipTurn.getClass.getTypeName)) // TODO find propper solution*/
+        && player.COLOR.equals(state.activePlayer.COLOR)) {
+        placeShip(player, startPoint, shipSize, orientation)
+      } else {
+        sender() ! PrintMessage("Player is not allowed to place ships at the moment")
+        sender() ! state
+      }
+    case HitShip(playerToHit: Player, pointToHit: Point) =>
+      if (state.state.equals(ShootTurn) /*getClass.getTypeName.equals(PlaceShipTurn.getClass.getTypeName)) // TODO find propper solution*/
+        && playerToHit.COLOR.equals(state.otherPlayer.COLOR)) {
+        hitShip(playerToHit, pointToHit)
+      } else {
+        sender() ! PrintMessage("Player is not allowed to shoot at the moment")
+        sender() ! state
+      }
+
   }
 
-  def hitShip(playerToHit: Player, pointToHit: Point): String = {
-    playerToHit.field.hitField(pointToHit)
+
+  def placeShip(player: Player, startPoint: Point, shipSize: Int, orientation: Orientation) = {
+    if (player.field.placeShip(startPoint, shipSize, orientation.toString)) {
+      //update, players switched todo
+    } else {
+      //msg + try again todo
+    }
+  }
+
+  def hitShip(playerToHit: Player, pointToHit: Point) = {
+    observers.foreach(_ ! PrintMessage(playerToHit.field.hitField(pointToHit)))
+    //update todo
   }
 
   def gameStart() = {
     /*GuiView.controller = this
     GuiView.startGame*/
-    observers.foreach(_ ! StartGame) //view.startGame
+    //    observers.foreach(_ ! StartGame) //view.startGame
+
     placeShipTurn(player1, player2)
-    val winner = shootShipTurn(player1, player2)
-    observers.foreach(_ ! AnnounceWinner(winner.COLOR)) //view.announceWinner(winner.COLOR)
-  }
 
-  /*
-   recursively called method to shoot other players ship until only one player got ships left
-   winning player is returned
-  */
-  def shootShipTurn(player: Player, nextPlayer: Player): Player = {
-    observers.foreach(_ ! PlayerSwitch(player)) //view.playerSwitch(player)
-
-    //    var point = view.shootTurn() todo lukas akka
-    //    view.printMessage(nextPlayer.field.hitField(point)) todo lukas akka
-
-    if (nextPlayer.field.fieldGrid.isEmpty) return player //return winning player
-
-    shootShipTurn(nextPlayer, player)
+    shootShipTurn(player1, player2)
   }
 
   def placeShipTurn(player: Player, nextPlayer: Player): Unit = {
@@ -96,6 +107,26 @@ case class Controller(fieldSize: Int) extends Actor {
       //todo
       observers.foreach(_ ! PrintMessage("all ships placed")) //view.printMessage("all ships placed")
     }
+  }
+
+  /*
+   recursively called method to shoot other players ship until only one player got ships left
+   winning player is returned
+  */
+  def shootShipTurn(player: Player, nextPlayer: Player): Unit = {
+    observers.foreach(_ ! PlayerSwitch(player)) //view.playerSwitch(player)
+    observers.foreach(_ ! ShootTurn)
+
+    //    var point = view.shootTurn() todo lukas akka
+    //    view.printMessage(nextPlayer.field.hitField(point)) todo lukas akka
+
+    if (nextPlayer.field.fieldGrid.isEmpty) {
+      state = Update(AnnounceWinner, player, null) //view.announceWinner(winner.COLOR)
+      observers.foreach(_ ! state)
+      return
+    }
+
+    shootShipTurn(nextPlayer, player)
   }
 
 }

@@ -2,23 +2,23 @@ package de.htwg.se.battleship.model
 
 object Akka {
 
-  case class HelloWorld()
+  case class StartGame() //tells controller to start the game
 
-  case class RegisterObserver()
+  case class RegisterObserver() //registers observer and "responds" current state
+  case class UnregisterObserver() //unregisters observer
 
-  case class UnregisterObserver()
+  case class Update(state: _, activePlayer: Player, otherPlayer: Player) //update observers after action or registration
 
-  case class StartGame()
+  //current phases of the game; what is the controller waiting for
+  case class PlaceShipTurn() //ask to place ship (coordinates, size and orientation)
+  case class ShootTurn() //ask to shoot at coordinates
+  case class AnnounceWinner()
 
-  case class PlaceShipTurn(player1: Player, player2: Player)
+  //announce winner
 
-  case class AnnounceWinner(winnerColor: String) //todo color instead of String
-  case class PlayerSwitch(player: Player)
+  //actions of player
+  case class PlaceShip(player: Player, startPoint: Point, shipSize: Int, orientation: Orientation) //place ship
+  case class HitShip(playerToHit: Player, pointToHit: Point) //shoot at coordinates
 
-  case class PrintMessage(message: String)
-
-  case class ShootTurn()
-
-  case class PrintField(field: _, playerColor: _)
-
+  case class PrintMessage(message: String) //ask to print/react to a message (e.g. "invalid placement")
 }
