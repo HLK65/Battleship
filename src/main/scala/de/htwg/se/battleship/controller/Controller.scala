@@ -1,7 +1,7 @@
 package de.htwg.se.battleship.controller
 
 import akka.actor.{Actor, ActorRef, Props}
-import de.htwg.se.battleship.model.Akka._
+import de.htwg.se.battleship.model.Message._
 import de.htwg.se.battleship.model._
 
 object Controller {
@@ -24,7 +24,7 @@ case class Controller(fieldSize: Int) extends Actor {
   val player1 = Player(player1Color, field1, shipInventory.clone())
   val player2 = Player(player2Color, field2, shipInventory.clone())
 
-  var state = Update(MyEnum.PlaceShipTurn, player1, player2)
+  var state = Update(PlaceShipTurn, player1, player2)
 
   override def receive: Receive = {
     case StartGame => gameStart()
@@ -32,7 +32,7 @@ case class Controller(fieldSize: Int) extends Actor {
     case UnregisterObserver => observers -= sender()
 
     case PlaceShip(player: Player, startPoint: Point, shipSize: Int, orientation: Orientation) =>
-      if (state.state.equals(PlaceShipTurn) /*getClass.getTypeName.equals(PlaceShipTurn.getClass.getTypeName)) // TODO find propper solution*/
+      if (state.state.equals(PlaceShipTurn)
         && player.COLOR.equals(state.activePlayer.COLOR)) {
         placeShip(player, startPoint, shipSize, orientation)
       } else {
@@ -40,7 +40,7 @@ case class Controller(fieldSize: Int) extends Actor {
         sender() ! state
       }
     case HitShip(playerToHit: Player, pointToHit: Point) =>
-      if (state.state.equals(ShootTurn) /*getClass.getTypeName.equals(PlaceShipTurn.getClass.getTypeName)) // TODO find propper solution*/
+      if (state.state.equals(ShootTurn)
         && playerToHit.COLOR.equals(state.otherPlayer.COLOR)) {
         hitShip(playerToHit, pointToHit)
       } else {
@@ -53,10 +53,21 @@ case class Controller(fieldSize: Int) extends Actor {
     placeShipTurn(player1, player2)
   }
 
+  def placeShip(player: Player, startPoint: Point, shipSize: Int, orientation: Orientation): Unit = {
+    if (player.placeShip(startPoint, shipSize, orientation)) {
+      //todo remove ship from inventory
+      observers.foreach(_ ! PrintMessage("Ship placed"))
+      placeShipTurn(state.otherPlayer, state.activePlayer)
+    } else {
+      observers.foreach(_ ! PrintMessage("placing ship failed"))
+      observers.foreach(_ ! state)
+    }
+  }
+
   def placeShipTurn(player: Player, nextPlayer: Player): Unit = {
     //check if the player still has ships to place
     if (player.shipInventory.nonEmpty) {
-      state = Update(MyEnum.PlaceShipTurn, player, nextPlayer)
+      state = Update(PlaceShipTurn, player, nextPlayer)
       observers.foreach(_ ! state)
     } else {
       observers.foreach(_ ! PrintMessage("all ships placed")) //view.printMessage("all ships placed")
@@ -64,22 +75,12 @@ case class Controller(fieldSize: Int) extends Actor {
     }
   }
 
-  def placeShip(player: Player, startPoint: Point, shipSize: Int, orientation: Orientation): Unit = {
-    if (player.field.placeShip(startPoint, shipSize, orientation.toString)) {
-      observers.foreach(_ ! "Ship placed")
-      placeShipTurn(state.otherPlayer, state.activePlayer)
-    } else {
-      observers.foreach(_ ! "placing ship failed")
-      observers.foreach(_ ! state)
-    }
-  }
-
   def shootShipTurn(player: Player, nextPlayer: Player): Unit = {
     if (nextPlayer.field.fieldGrid.nonEmpty) {
-      state = Update(MyEnum.ShootTurn, player, nextPlayer)
+      state = Update(ShootTurn, player, nextPlayer)
       observers.foreach(_ ! state)
     } else {
-      state = Update(MyEnum.AnnounceWinner, player, null) //view.announceWinner(winner.COLOR)
+      state = Update(AnnounceWinner, player, null) //view.announceWinner(winner.COLOR)
       observers.foreach(_ ! state)
     }
   }

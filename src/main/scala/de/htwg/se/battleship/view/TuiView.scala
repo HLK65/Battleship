@@ -1,7 +1,7 @@
 package de.htwg.se.battleship.view
 
 import akka.actor.ActorRef
-import de.htwg.se.battleship.model.Akka._
+import de.htwg.se.battleship.model.Message._
 import de.htwg.se.battleship.model._
 
 class TuiView(val controller: ActorRef) extends View {
@@ -9,18 +9,18 @@ class TuiView(val controller: ActorRef) extends View {
   controller ! RegisterObserver
 
   override def receive: Receive = {
-    case Update(state: MyEnum.Value, activePlayer: Player, otherPlayer: Player) => update(state, activePlayer, otherPlayer)
+    case Update(state: Phase, activePlayer: Player, otherPlayer: Player) => update(state, activePlayer, otherPlayer)
     case PrintMessage(message: String) => println(Console.BLACK + message)
   }
 
-  def update(state: MyEnum.Value, activePlayer: Player, otherPlayer: Player): Unit = {
+  def update(state: Phase, activePlayer: Player, otherPlayer: Player): Unit = {
+    playerSwitch(activePlayer);
     state match {
-      case MyEnum.PlaceShipTurn => println("partytime") //todo
+      case PlaceShipTurn => printField(activePlayer.field, activePlayer.COLOR)
+        placeShip(activePlayer)
+      case ShootTurn => shootTurn(otherPlayer)
+      case AnnounceWinner => announceWinner(activePlayer)
     }
-  }
-
-  override def startGame: Unit = { //todo cleanup view and remove all useless stuff
-    println("Game starts")
   }
 
   def placeShip(player: Player): Unit = {
@@ -30,17 +30,17 @@ class TuiView(val controller: ActorRef) extends View {
     controller ! PlaceShip(player, point, size, orientation)
   }
 
-  override def announceWinner(color: String): Unit = {
-    println(Console.BLACK + color + " won")
+  override def announceWinner(winner: Player): Unit = {
+    println(Console.BLACK + winner.COLOR + " won with " + winner.field.size + " boatpoints left")
   }
 
-  def shootTurn(): Point = {
+  override def shootTurn(enemy: Player): Unit = {
 
     println("Select Point you want to shoot. x then y")
     val xInput = scala.io.StdIn.readInt()
     val yInput = scala.io.StdIn.readInt()
     val point = Point(xInput, yInput)
-    point
+    controller ! HitShip(enemy, point)
   }
 
   def playerSwitch(player: Player): Unit = {
@@ -90,7 +90,7 @@ class TuiView(val controller: ActorRef) extends View {
   }
 
   override def readPoint(): Point = {
-    println("Select Point. x then y")
+    println("Select top-left Point. x then y")
     val pointInputX = scala.io.StdIn.readInt()
     val pointInputY = scala.io.StdIn.readInt()
     val point = Point(pointInputX, pointInputY)

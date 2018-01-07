@@ -3,7 +3,7 @@ package de.htwg.se.battleship
 import akka.actor.{ActorSystem, Props}
 import com.typesafe.config.ConfigFactory
 import de.htwg.se.battleship.controller.Controller
-import de.htwg.se.battleship.model.Akka.StartGame
+import de.htwg.se.battleship.model.Message.StartGame
 import de.htwg.se.battleship.view.TuiView
 
 object Battleship {

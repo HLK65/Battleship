@@ -7,7 +7,7 @@ package de.htwg.se.battleship.model
  */
 case class Ship(val SIZE: Int) {
 
-  var hitPoints = SIZE // TODO var vermeiden
+  var hitPoints = SIZE // TODO var vermeiden -> return new ship on hitShip
 
   /**
    * Removes one point from the hitPoints
