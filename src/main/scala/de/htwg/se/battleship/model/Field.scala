@@ -8,7 +8,6 @@ case class Field(size: Int) {
     shoot on point, if water return water, if hit return hit, if hit & sunk return sunk
    */
   def hitField(point: Point): String = {
-    val hitShip = "hit water"
     if (fieldGrid.contains(point)) {
       val ship = fieldGrid.apply(point)
       fieldGrid -= point
@@ -18,7 +17,7 @@ case class Field(size: Int) {
         "hit ship"
       }
     } else {
-      hitShip
+      "hit water"
     }
   }
 

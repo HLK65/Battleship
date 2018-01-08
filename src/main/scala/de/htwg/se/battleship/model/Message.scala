@@ -14,6 +14,7 @@ object Message {
 
   case class Update(state: Phase, activePlayer: Player, otherPlayer: Player) //update observers after action or registration
 
+  case object Init extends Phase
   case object PlaceShipTurn extends Phase //ask to place ship (coordinates, size and orientation)
   case object ShootTurn extends Phase //ask to shoot at coordinates
   case object AnnounceWinner extends Phase

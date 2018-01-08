@@ -14,12 +14,13 @@ class TuiView(val controller: ActorRef) extends View {
   }
 
   def update(state: Phase, activePlayer: Player, otherPlayer: Player): Unit = {
-    playerSwitch(activePlayer);
+    playerSwitch(activePlayer)
     state match {
       case PlaceShipTurn => printField(activePlayer.field, activePlayer.COLOR)
         placeShip(activePlayer)
       case ShootTurn => shootTurn(otherPlayer)
       case AnnounceWinner => announceWinner(activePlayer)
+      case Init => println("Init")
     }
   }
 
@@ -37,8 +38,8 @@ class TuiView(val controller: ActorRef) extends View {
   override def shootTurn(enemy: Player): Unit = {
 
     println("Select Point you want to shoot. x then y")
-    val xInput = scala.io.StdIn.readInt()
-    val yInput = scala.io.StdIn.readInt()
+    val xInput = readInt()
+    val yInput = readInt()
     val point = Point(xInput, yInput)
     controller ! HitShip(enemy, point)
   }
@@ -76,7 +77,7 @@ class TuiView(val controller: ActorRef) extends View {
 
   override def readOrientation(): Orientation = {
     println("Choose orientation. 1 horizontal, else vertical")
-    if (scala.io.StdIn.readInt() == 1) Orientation.HORIZONTAL
+    if (readInt() == 1) Orientation.HORIZONTAL
     else Orientation.VERTICAL
   }
 
@@ -86,19 +87,28 @@ class TuiView(val controller: ActorRef) extends View {
     println("Ships you can place: " + player.shipInventory.toString() + " [Size -> Amount]")
     //read what kind of ship the player wanted to place
     println("Select size of the ship you want to place")
-    scala.io.StdIn.readInt()
+    readInt()
   }
 
   override def readPoint(): Point = {
     println("Select top-left Point. x then y")
-    val pointInputX = scala.io.StdIn.readInt()
-    val pointInputY = scala.io.StdIn.readInt()
+    val pointInputX = readInt()
+    val pointInputY = readInt()
     val point = Point(pointInputX, pointInputY)
     point
   }
 
   override def printMessage(message: String): Unit = {
     println(message)
+  }
+
+  def readInt(): Int = {
+    try scala.io.StdIn.readInt()
+    catch {
+      case _:Throwable =>
+        println("try again... numbers only")
+        readInt()
+    }
   }
 
 }
