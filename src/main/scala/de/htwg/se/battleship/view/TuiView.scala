@@ -105,7 +105,7 @@ class TuiView(val controller: ActorRef) extends View {
   def readInt(): Int = {
     try scala.io.StdIn.readInt()
     catch {
-      case _:Throwable =>
+      case _: Throwable =>
         println("try again... numbers only")
         readInt()
     }

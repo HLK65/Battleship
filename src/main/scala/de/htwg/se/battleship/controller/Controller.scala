@@ -90,5 +90,3 @@ case class Controller(fieldSize: Int) extends Actor {
     shootShipTurn(state.otherPlayer, state.activePlayer)
   }
 }
-
-
