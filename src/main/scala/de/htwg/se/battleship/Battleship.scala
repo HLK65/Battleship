@@ -1,10 +1,10 @@
 package de.htwg.se.battleship
 
-import akka.actor.{ActorSystem, Props}
+import akka.actor.{ ActorSystem, Props }
 import com.typesafe.config.ConfigFactory
 import de.htwg.se.battleship.controller.Controller
 import de.htwg.se.battleship.model.Message.StartGame
-import de.htwg.se.battleship.view.TuiView
+import de.htwg.se.battleship.view.{ GuiView, TuiView }
 
 object Battleship {
 
@@ -14,6 +14,7 @@ object Battleship {
     val actorSystem = ActorSystem.create(actorSystemName)
     val controller = actorSystem.actorOf(Controller.props(fieldSize), controllerActorName)
     val tui = actorSystem.actorOf(Props(new TuiView(controller)))
+    val gui = actorSystem.actorOf(Props(new GuiView(controller)))
 
     controller.tell(StartGame, null)
 

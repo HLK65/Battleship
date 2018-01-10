@@ -1,5 +1,6 @@
-/*
 package de.htwg.se.battleship.view.stages
+
+import de.htwg.se.battleship.model.Player
 
 import scalafx.Includes._
 import scalafx.application.JFXApp
@@ -15,8 +16,9 @@ import scalafx.scene.text.Text
 
 object WinnerAnnouncementStage extends JFXApp {
 
-  def announceWinner(color: String): Unit = {
+  def announceWinner(player: Player): Unit = {
 
+    val color = player.COLOR
     val readyButton = new Button("Close")
 
     readyButton.onAction = (event: ActionEvent) => {
@@ -26,8 +28,8 @@ object WinnerAnnouncementStage extends JFXApp {
     readyButton.style = "-fx-font-size: 12pt"
     JFXApp.ActiveApp.stage = new PrimaryStage {
       title.value = "We have a Winner!"
-      width = 300
-      height = 250
+      width = 1000
+      height = 1500
       scene = new Scene {
         fill = Black
         content = new VBox {
@@ -56,4 +58,4 @@ object WinnerAnnouncementStage extends JFXApp {
     }
     //    stage.show()
   }
-}*/
+}
