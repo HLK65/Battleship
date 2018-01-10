@@ -4,13 +4,14 @@ import akka.actor.{ Actor, ActorRef }
 import de.htwg.se.battleship.model.Message._
 import de.htwg.se.battleship.model.{ Orientation, Player, Point }
 import de.htwg.se.battleship.view.stages.GuiViewStage
-import de.htwg.se.battleship.view.stages.GuiViewStage.shipSelection
+
+import scalafx.scene.control.Button
 
 class GuiView(val controller: ActorRef) extends Actor {
 
   controller ! RegisterObserver
-  GuiViewStage.startGame
   var gameStarted = false
+  var firstPlayer: Player = null
 
   override def receive: Receive = {
     case Update(state: Phase, activePlayer: Player, otherPlayer: Player) => update(state, activePlayer, otherPlayer)
@@ -36,10 +37,14 @@ class GuiView(val controller: ActorRef) extends Actor {
   }
 
   def placeShip(player: Player): Unit = {
-    GuiViewStage.placeShip(player)
     if (!gameStarted) {
-      GuiViewStage.startGame
-      gameStarted = true;
+      GuiViewStage.guiView = this
+      firstPlayer = player
+      gameStarted = true
+      GuiViewStage.firstTurn(player)
+      GuiViewStage.startGame(player)
+    } else {
+      GuiViewStage.placeShip(player)
     }
   }
 

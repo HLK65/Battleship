@@ -1,8 +1,6 @@
 
 package de.htwg.se.battleship.view.stages
 
-import javafx.embed.swing.JFXPanel
-
 import de.htwg.se.battleship.model._
 import de.htwg.se.battleship.view.GuiView
 
@@ -25,21 +23,52 @@ object GuiViewStage extends JFXApp {
   val args: Array[String] = new Array[String](1)
   var guiView: GuiView = null
 
-  def startGame: Unit = {
-    //start the main bevore you can change the stage
-
-    main(args);
-    stage.show()
+  var readyButton = new Button("Ready")
+  readyButton.style = "-fx-font-size: 12pt"
+  stage = new PrimaryStage {
+    title.value = "Scala Battle Ships"
+    width = 100
+    height = 150
+    scene = new Scene {
+      fill = Black
+      content = new VBox {
+        padding = Insets(20)
+        children = Seq(
+          new Text {
+            text = "Player Red "
+            style = "-fx-font-size: 12pt"
+            fill = new LinearGradient(
+              endX = 0,
+              stops = Stops(Red, Red)
+            )
+          },
+          new Text {
+            text = "Player Blue"
+            style = "-fx-font-size: 12pt"
+            fill = new LinearGradient(
+              endX = 0,
+              stops = Stops(Blue, Blue)
+            )
+          },
+          readyButton
+        )
+      }
+    }
   }
 
-  def showStage(newStage: PrimaryStage): Unit = {
-    newStage.title = "BattleShips"
-    newStage.show()
+  def startGame(player: Player): Unit = {
+    //start the main bevore you can change the stage
+    main(args)
   }
 
   def placeShip(player: Player): Unit = {
     selectShip(player)
   }
+
+  def firstTurn(player: Player): Unit = {
+    stage = FieldStage.createStage(player, createFieldGrid(player.field, true, player))
+  }
+
   def shootTurn(player: Player): Unit = {
     FieldStage.createStage(player, createFieldGrid(player.field, false, player))
   }
@@ -51,8 +80,17 @@ object GuiViewStage extends JFXApp {
 
   def printMessage(message: String): Unit = ???
 
-  def selectShip(player: Player): PrimaryStage = {
-    FieldStage.createStage(player, createFieldGrid(player.field, true, player))
+  def selectShip(player: Player): Unit = {
+    //FieldStage.createStage(player, createFieldGrid(player.field, true, player))
+    switchScene(createFieldGrid(player.field, true, player))
+  }
+
+  private def switchScene(gridPane: GridPane) = {
+    val scene = new Scene {
+      fill = DarkBlue
+      content = gridPane
+    }
+    stage.scene = scene
   }
 
   def createFieldGrid(field: Field, placeTurn: Boolean, player: Player): GridPane = {
@@ -155,4 +193,5 @@ object GuiViewStage extends JFXApp {
       )
     }
   }
+
 }
