@@ -1,6 +1,8 @@
 
 package de.htwg.se.battleship.view.stages
 
+import javafx.embed.swing.JFXPanel
+
 import de.htwg.se.battleship.model._
 import de.htwg.se.battleship.view.GuiView
 
@@ -55,9 +57,10 @@ object GuiViewStage extends JFXApp {
       }
     }
   }
-
   def startGame(player: Player): Unit = {
     //start the main bevore you can change the stage
+
+    new JFXPanel()
     main(args)
   }
 

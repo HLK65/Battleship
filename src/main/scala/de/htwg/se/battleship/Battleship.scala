@@ -4,6 +4,7 @@ import akka.actor.{ ActorSystem, Props }
 import com.typesafe.config.ConfigFactory
 import de.htwg.se.battleship.controller.Controller
 import de.htwg.se.battleship.model.Message.StartGame
+import de.htwg.se.battleship.view.stages.GuiViewStage
 import de.htwg.se.battleship.view.{ GuiView, TuiView }
 
 object Battleship {

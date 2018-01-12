@@ -11,7 +11,6 @@ class GuiView(val controller: ActorRef) extends Actor {
 
   controller ! RegisterObserver
   var gameStarted = false
-  var firstPlayer: Player = null
 
   override def receive: Receive = {
     case Update(state: Phase, activePlayer: Player, otherPlayer: Player) => update(state, activePlayer, otherPlayer)
@@ -39,13 +38,10 @@ class GuiView(val controller: ActorRef) extends Actor {
   def placeShip(player: Player): Unit = {
     if (!gameStarted) {
       GuiViewStage.guiView = this
-      firstPlayer = player
       gameStarted = true
-      GuiViewStage.firstTurn(player)
       GuiViewStage.startGame(player)
-    } else {
-      GuiViewStage.placeShip(player)
     }
+    GuiViewStage.placeShip(player)
   }
 
   def shootTurn(player: Player): Unit = {
