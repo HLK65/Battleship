@@ -11,7 +11,6 @@ object Message {
 
   case class Update(state: Phase, activePlayer: Player, otherPlayer: Player) //update observers after action or registration
 
-
   sealed trait Phase //current phases of the game; what is the controller waiting for
   case object Init extends Phase // game not started yet
   case object PlaceShipTurn extends Phase //ask to place ship (coordinates, size and orientation)
