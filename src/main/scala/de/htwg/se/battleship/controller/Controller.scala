@@ -26,6 +26,9 @@ case class Controller(fieldSize: Int) extends Actor {
 
   var state = Update(Init, player1, player2)
 
+  /**
+    * handle incoming akka messages
+    */
   override def receive: Receive = {
     case StartGame => gameStart()
     case RegisterObserver =>
@@ -50,13 +53,22 @@ case class Controller(fieldSize: Int) extends Actor {
       }
   }
 
+  /**
+    * triggers the game start
+    */
   def gameStart(): Unit = {
     placeShipTurn(player1, player2)
   }
 
+  /**
+    * place a ship
+    * @param player for the given player
+    * @param startPoint at the given point (further points will be calculated)
+    * @param shipSize with the given size
+    * @param orientation and orientation
+    */
   def placeShip(player: Player, startPoint: Point, shipSize: Int, orientation: Orientation): Unit = {
     if (player.placeShip(startPoint, shipSize, orientation)) {
-      //todo remove ship from inventory
       observers.foreach(_ ! PrintMessage("Ship placed"))
       placeShipTurn(state.otherPlayer, state.activePlayer)
     } else {
@@ -65,6 +77,11 @@ case class Controller(fieldSize: Int) extends Actor {
     }
   }
 
+  /**
+    * asks the UIs for a ship placement action
+    * @param player the place the ship
+    * @param nextPlayer enemy
+    */
   def placeShipTurn(player: Player, nextPlayer: Player): Unit = {
     //check if the player still has ships to place
     if (player.shipInventory.nonEmpty) {
@@ -76,6 +93,11 @@ case class Controller(fieldSize: Int) extends Actor {
     }
   }
 
+  /**
+    * asks the UIs for a shoot ship action
+    * @param player to shoot
+    * @param nextPlayer to get shot at
+    */
   def shootShipTurn(player: Player, nextPlayer: Player): Unit = {
     if (player.field.fieldGrid.nonEmpty) {
       state = Update(ShootTurn, player, nextPlayer)
@@ -86,6 +108,11 @@ case class Controller(fieldSize: Int) extends Actor {
     }
   }
 
+  /**
+    * shoot action, try to hit a ship. Returns the result directly to UIs.
+    * @param playerToHit player on which field will be shot
+    * @param pointToHit coordinates to shoot at
+    */
   def hitShip(playerToHit: Player, pointToHit: Point): Unit = {
     observers.foreach(_ ! PrintMessage(playerToHit.field.hitField(pointToHit)))
     shootShipTurn(state.otherPlayer, state.activePlayer)
