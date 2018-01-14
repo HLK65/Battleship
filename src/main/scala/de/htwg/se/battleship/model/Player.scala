@@ -6,11 +6,17 @@ case class Player(COLOR: String, field: Field, shipInventory: scala.collection.m
     if (shipInventory.contains(shipSize)) {
       val success = field.placeShip(startPoint, shipSize, orientation.toString) //check if placement possible
       if (success) {
-        val amount = shipInventory.get(shipSize).get
-        if (amount - 1 > 0) shipInventory.put(shipSize, amount - 1) //reduce amount in inv
-        else shipInventory.remove(shipSize) //delete key if last ship of size got placed
+        val amount = shipInventory.get(shipSize).get //todo test against: shipInventory(shipSize)
+        if (amount - 1 > 0) {
+          shipInventory.put(shipSize, amount - 1)
+        } //reduce amount in inv
+        else {
+          shipInventory.remove(shipSize) //delete key if last ship of size got placed
+        }
       }
       success
-    } else false
+    } else {
+      false
+    }
   }
 }

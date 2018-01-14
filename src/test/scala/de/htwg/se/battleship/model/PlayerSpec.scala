@@ -3,7 +3,6 @@ package de.htwg.se.battleship.model
 import org.scalatest.{ FlatSpec, Matchers }
 
 class PlayerSpec extends FlatSpec with Matchers {
-  //TODO check for "java before"
   val shipInventory: scala.collection.mutable.Map[ /*size*/ Int, /*amount*/ Int] =
     scala.collection.mutable.Map( /*5 -> 1, 4 -> 2, 3 -> 3, */ 2 -> 1)
   val playerColor = "Red"
@@ -20,5 +19,18 @@ class PlayerSpec extends FlatSpec with Matchers {
 
   "A Player" should "hava a shipInventory" in {
     player.shipInventory should be(shipInventory)
+  }
+
+  "A Player" should "allow placing a ship and remove it from inventory" in {
+    player.placeShip(Point(1, 1), 2, Orientation.HORIZONTAL) should be(true)
+    player.shipInventory.size should be(0)
+  }
+
+  "A Player" should "not allow placing a ship at invalid coordinates" in {
+    player.placeShip(Point(3, 3), 2, Orientation.HORIZONTAL) should be(false)
+  }
+
+  "A Player" should "not allow placing a ship not in inventory" in {
+    player.placeShip(Point(1, 1), 3, Orientation.HORIZONTAL) should be(false)
   }
 }

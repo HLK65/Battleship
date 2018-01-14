@@ -1,4 +1,3 @@
-/*
 package de.htwg.se.battleship.controller
 
 import de.htwg.se.battleship.model.Point
@@ -9,7 +8,7 @@ import org.scalatest.{ FlatSpec, Matchers }
 
 class ControllerSpec extends FlatSpec with Matchers {
 
-  val view = mock(classOf[View])
+  /*val view = mock(classOf[View])
   val controller = Controller(4, view)
   when(view.selectShip(controller.player2)).thenReturn(2)
   when(view.selectShip(controller.player1)).thenReturn(1).thenReturn(2)
@@ -20,7 +19,6 @@ class ControllerSpec extends FlatSpec with Matchers {
     thenReturn(Point(4, 1)).thenReturn(Point(1, 4))
   "a Controller" should "play a game" in {
     controller.gameStart()
-  }
+  }*/
 
 }
-*/

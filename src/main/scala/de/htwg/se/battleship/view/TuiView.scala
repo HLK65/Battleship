@@ -16,7 +16,8 @@ class TuiView(val controller: ActorRef) extends View {
   def update(state: Phase, activePlayer: Player, otherPlayer: Player): Unit = {
     playerSwitch(activePlayer)
     state match {
-      case PlaceShipTurn => printField(activePlayer.field, activePlayer.COLOR)
+      case PlaceShipTurn =>
+        printField(activePlayer.field, activePlayer.COLOR)
         placeShip(activePlayer)
       case ShootTurn => shootTurn(otherPlayer)
       case AnnounceWinner => announceWinner(activePlayer)
@@ -80,7 +81,6 @@ class TuiView(val controller: ActorRef) extends View {
     if (readInt() == 1) Orientation.HORIZONTAL
     else Orientation.VERTICAL
   }
-
 
   override def selectShip(player: Player): Int = {
     //show player what ships he still has to place
