@@ -23,3 +23,4 @@ libraryDependencies ++= {
   )
 }
 libraryDependencies += "org.mockito" % "mockito-all" % "1.8.4" % "test"
+libraryDependencies += "org.scala-lang" % "scala-swing" % "2.11.0-M7"

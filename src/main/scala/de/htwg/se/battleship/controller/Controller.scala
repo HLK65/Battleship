@@ -3,6 +3,7 @@ package de.htwg.se.battleship.controller
 import akka.actor.{ Actor, ActorRef, Props }
 import de.htwg.se.battleship.model.Message._
 import de.htwg.se.battleship.model._
+import de.htwg.se.battleship.view.Swing.Player1Container
 
 object Controller {
   def props(fieldSize: Int): Props = Props(new Controller(fieldSize))
@@ -57,6 +58,7 @@ case class Controller(fieldSize: Int) extends Actor {
     * triggers the game start
     */
   def gameStart(): Unit = {
+    Player1Container.playerOne = player1
     placeShipTurn(player1, player2)
   }
 
