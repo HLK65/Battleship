@@ -29,6 +29,7 @@ class GuiView(val controller: ActorRef) extends Actor {
   }
 
   def printMessage(message: String): Unit = {
+    battleshipWindow.printMessage(message)
   }
 
   def placeShip(player: Player): Unit = {
@@ -37,15 +38,22 @@ class GuiView(val controller: ActorRef) extends Actor {
   }
 
   def shootTurn(player: Player): Unit = {
+    battleshipWindow.hitSHip(player)
+    battleshipWindow.visible = true
   }
 
   def announceWinner(winner: Player): Unit = {
+    val message = winner.COLOR + " has Won the game"
+    printMessage(message)
+    battleshipWindow.endgame()
   }
 
   def hitShipCall(player: Player, point: Point): Unit = {
     controller ! HitShip(player, point)
+    battleshipWindow.visible = false
   }
   def placeShipCall(player: Player, point: Point, size: Int, orientation: Orientation): Unit = {
     controller ! PlaceShip(player, point, size, orientation)
+    battleshipWindow.visible = false
   }
 }
