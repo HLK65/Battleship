@@ -1,18 +1,18 @@
 package de.htwg.se.battleship.view.Swing
 
-import java.awt.{ Color, Dimension }
+import java.awt.{ Color, Dimension, Toolkit }
 
 import de.htwg.se.battleship
 import de.htwg.se.battleship.model.{ Orientation => _, _ }
 import de.htwg.se.battleship.view.GuiView
-import de.htwg.se.battleship.view.stages.GuiViewStage.shipSelection
 
 import scala.swing._
 
 class BattleshipWindow(guiView: GuiView) extends MainFrame {
   title = "BattleShips"
   peer.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE)
-  preferredSize = new Dimension(1500, 1500)
+  // preferredSize = new Dimension(1500, 1500)
+  val dimension = Toolkit.getDefaultToolkit().getScreenSize()
 
   var shipSelection: ShipSelection = null
 
@@ -68,8 +68,13 @@ class BattleshipWindow(guiView: GuiView) extends MainFrame {
       }
     }
     val boxPanel = new BoxPanel(Orientation.Vertical)
-    val label = createText(player.COLOR + "´s turn")
-    boxPanel.contents += label
+    if (placeTurn) {
+      val label = createPlaceHeader(player)
+      boxPanel.contents += label
+    } else {
+      val label = createHitHeader(player)
+      boxPanel.contents += label
+    }
     if (placeTurn) {
       boxPanel.contents += createShipSelection(player)
     }
@@ -85,6 +90,23 @@ class BattleshipWindow(guiView: GuiView) extends MainFrame {
   private def createShip(): Label = {
     val label = new Label("X")
     label
+  }
+
+  private def createHitHeader(player: Player): Label = {
+    var label = new Label()
+
+    if (player.COLOR.equals("Red")) {
+      label = createText("Blue´s turn")
+      label.background = Color.blue
+    } else {
+      label = createText("Red´s turn")
+      label.background = Color.red
+    }
+    label
+  }
+
+  private def createPlaceHeader(player: Player): Label = {
+    createText(player.COLOR + "´s turn")
   }
 
   private def createButton(x: Int, y: Int, player: Player): Button = {

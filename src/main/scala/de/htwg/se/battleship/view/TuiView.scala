@@ -15,14 +15,17 @@ class TuiView(val controller: ActorRef) extends View {
 
   def update(state: Phase, activePlayer: Player, otherPlayer: Player): Unit = {
     playerSwitch(activePlayer)
-    state match {
-      case PlaceShipTurn =>
-        printField(activePlayer.field, activePlayer.COLOR)
-        placeShip(activePlayer)
-      case ShootTurn => shootTurn(otherPlayer)
-      case AnnounceWinner => announceWinner(activePlayer)
-      case Init => println("Init")
-    }
+    printField(activePlayer.field, activePlayer.COLOR)
+    /**
+     * state match {
+     * case PlaceShipTurn =>
+     * printField(activePlayer.field, activePlayer.COLOR)
+     * placeShip(activePlayer)
+     * case ShootTurn => shootTurn(otherPlayer)
+     * case AnnounceWinner => announceWinner(activePlayer)
+     * case Init => println("Init")
+     * }*
+     */
   }
 
   def placeShip(player: Player): Unit = {
