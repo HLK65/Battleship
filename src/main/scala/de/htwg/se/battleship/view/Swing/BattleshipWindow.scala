@@ -1,9 +1,9 @@
 package de.htwg.se.battleship.view.Swing
 
-import java.awt.{ Color, Dimension, Toolkit }
+import java.awt.{Color, Dimension, Toolkit}
 
 import de.htwg.se.battleship
-import de.htwg.se.battleship.model.{ Orientation => _, _ }
+import de.htwg.se.battleship.model.{Orientation => _, _}
 import de.htwg.se.battleship.view.GuiView
 
 import scala.swing._
@@ -94,23 +94,28 @@ class BattleshipWindow(guiView: GuiView) extends MainFrame {
 
   private def createHitHeader(player: Player): Label = {
     var label = new Label()
-
     if (player.COLOR.equals("Red")) {
       label = createText("Blue´s turn")
-      label.background = Color.blue
+      label.foreground = Color.BLUE
     } else {
       label = createText("Red´s turn")
-      label.background = Color.red
+      label.foreground = Color.RED
     }
     label
   }
 
   private def createPlaceHeader(player: Player): Label = {
-    createText(player.COLOR + "´s turn")
+    var label = createText(player.COLOR + "´s turn")
+    if (player.COLOR.equals("Red")) {
+      label.foreground = Color.RED
+    } else {
+      label.foreground = Color.BLUE
+    }
+    label
   }
 
   private def createButton(x: Int, y: Int, player: Player): Button = {
-    var button = new Button("");
+    var button = new Button("")
     button.action = new Action("") {
       override def apply(): Unit = {
         if (shipSelection != null) {
@@ -121,6 +126,7 @@ class BattleshipWindow(guiView: GuiView) extends MainFrame {
     }
     button
   }
+
   private def createHitButton(x: Int, y: Int, player: Player): Button = {
     var button = new Button("")
     button.background = Color.RED
@@ -131,6 +137,7 @@ class BattleshipWindow(guiView: GuiView) extends MainFrame {
     }
     button
   }
+
   private def createShipSelection(player: Player): BoxPanel = {
     var selectPannel = new BoxPanel(Orientation.Horizontal)
     val shipText = this.createText("");
