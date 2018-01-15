@@ -14,8 +14,8 @@ object Battleship {
     val shipInventory: scala.collection.mutable.Map[Int, Int] = scala.collection.mutable.Map(/*5 -> 1, 4 -> 2, 3 -> 3*/ 2 -> 1)
     val actorSystem = ActorSystem.create(actorSystemName)
     val controller = actorSystem.actorOf(Controller.props(fieldSize, shipInventory), controllerActorName)
-    val tui = actorSystem.actorOf(Props(new TuiView(controller)))
-    val gui = actorSystem.actorOf(Props(new GuiView(controller)))
+    actorSystem.actorOf(Props(new TuiView(controller)))
+    actorSystem.actorOf(Props(new GuiView(controller)))
 
     controller ! StartGame
   }

@@ -20,29 +20,8 @@ class BattleshipWindow(guiView: GuiView) extends MainFrame {
     contents = createPlaceField(player)
   }
 
-  def hitSHip(player: Player) = {
-    contents = createHitField(player)
-  }
-
-  def printMessage(message: String) = {
-
-    Dialog.showMessage(contents.head, message, "Attention")
-  }
-
-  def endgame() = {
-    var box = new BoxPanel(Orientation.Vertical)
-    val labe = createText("The Game is over!")
-    box.contents += labe
-    contents = box
-
-  }
-
   private def createPlaceField(player: Player): BoxPanel = {
     createField(player.field, true, player)
-  }
-
-  private def createHitField(player: Player): BoxPanel = {
-    createField(player.field, false, player)
   }
 
   private def createField(field: Field, placeTurn: Boolean, player: Player): BoxPanel = {
@@ -82,11 +61,6 @@ class BattleshipWindow(guiView: GuiView) extends MainFrame {
     boxPanel
   }
 
-  private def createText(text: String): Label = {
-    var label = new Label(text)
-    label
-  }
-
   private def createShip(): Label = {
     val label = new Label("X")
     label
@@ -102,6 +76,10 @@ class BattleshipWindow(guiView: GuiView) extends MainFrame {
       label.foreground = Color.RED
     }
     label
+  }
+
+  def hitSHip(player: Player) = {
+    contents = createHitField(player)
   }
 
   private def createPlaceHeader(player: Player): Label = {
@@ -164,5 +142,27 @@ class BattleshipWindow(guiView: GuiView) extends MainFrame {
     }
     selectPannel.contents += shipText
     selectPannel
+  }
+
+  private def createHitField(player: Player): BoxPanel = {
+    createField(player.field, false, player)
+  }
+
+  def printMessage(message: String) = {
+
+    Dialog.showMessage(contents.head, message, "Attention")
+  }
+
+  def endgame() = {
+    var box = new BoxPanel(Orientation.Vertical)
+    val labe = createText("The Game is over!")
+    box.contents += labe
+    contents = box
+
+  }
+
+  private def createText(text: String): Label = {
+    var label = new Label(text)
+    label
   }
 }

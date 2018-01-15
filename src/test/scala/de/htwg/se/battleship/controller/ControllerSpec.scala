@@ -1,7 +1,7 @@
 package de.htwg.se.battleship.controller
 
 import akka.actor.ActorSystem
-import akka.testkit.{ImplicitSender, TestActors, TestKit}
+import akka.testkit.{ImplicitSender, TestKit}
 import de.htwg.se.battleship.model.Message._
 import de.htwg.se.battleship.model._
 import org.scalatest.{BeforeAndAfterAll, FlatSpecLike, Matchers}
@@ -12,24 +12,14 @@ class ControllerSpec() extends TestKit(ActorSystem("battleship")) with ImplicitS
   private val actorSystemName = "battleship"
   private val controllerActorName = "controller"
 
-  /*def this() = this(ActorSystem("battleship"))*/
-
   override def afterAll: Unit = {
     TestKit.shutdownActorSystem(system)
   }
-
-  "An Echo actor" should
-    "send back messages unchanged" in {
-      val echo = system.actorOf(TestActors.echoActorProps)
-      echo ! "hello world"
-      expectMsg("hello world")
-    }
 
   "A minimal game" should "work" in {
     val actorSystem = ActorSystem.create(actorSystemName)
     val controller = actorSystem.actorOf(Controller.props(fieldSize, shipInventory), controllerActorName)
     //    val tui = actorSystem.actorOf(Props(new TuiView(controller)))
-
     //    val testProbePlayerController = TestProbe()
 
     val player1 = Player("Red", Field(fieldSize), shipInventory.clone())

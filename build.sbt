@@ -9,9 +9,10 @@ resolvers += Resolver.jcenterRepo
 libraryDependencies ++= {
   val scalaTestV = "3.0.0-M15"
   val scalaMockV = "3.2.2"
-  val scalaFxV = "8.0.92-R10"
   val akkaV = "2.5.3"
   val configV = "1.3.1"
+  val mockitoV = "1.8.4"
+  val swingV = "2.11.0-M7"
 
   Seq(
     "com.typesafe.akka" %% "akka-actor" % akkaV,
@@ -19,8 +20,7 @@ libraryDependencies ++= {
     "com.typesafe" % "config" % configV,
     "org.scalatest" %% "scalatest" % scalaTestV % "test",
     "org.scalamock" %% "scalamock-scalatest-support" % scalaMockV % "test",
-    "org.scalafx" %% "scalafx" % scalaFxV
+    "org.mockito" % "mockito-all" % mockitoV % "test",
+    "org.scala-lang" % "scala-swing" % swingV
   )
 }
-libraryDependencies += "org.mockito" % "mockito-all" % "1.8.4" % "test"
-libraryDependencies += "org.scala-lang" % "scala-swing" % "2.11.0-M7"
