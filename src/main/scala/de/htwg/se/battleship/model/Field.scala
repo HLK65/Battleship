@@ -48,7 +48,7 @@ case class Field(size: Int) {
     if (!success) {
       //rollback
       fieldGrid.clear()
-      fieldGrid.++(fieldGridCopy.clone())
+      fieldGrid ++= (fieldGridCopy.clone())
     }
     success
   }

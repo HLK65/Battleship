@@ -19,7 +19,7 @@ case class Controller(fieldSize: Int) extends Actor {
   val field2 = Field(fieldSize)
 
   //1x5Felder, 2x4Felder, 3x3Felder, 4x2Felder
-  val shipInventory: scala.collection.mutable.Map[ /*size*/ Int, /*amount*/ Int] = scala.collection.mutable.Map( /*5 -> 1, 4 -> 2, 3 -> 3, */ 2 -> 1)
+  val shipInventory: scala.collection.mutable.Map[ /*size*/ Int, /*amount*/ Int] = scala.collection.mutable.Map(5 -> 1, 4 -> 2, 3 -> 3)
 
   val player1 = Player(player1Color, field1, shipInventory.clone())
   val player2 = Player(player2Color, field2, shipInventory.clone())
