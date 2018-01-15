@@ -1,6 +1,6 @@
 package de.htwg.se.battleship.controller
 
-import akka.actor.{ Actor, ActorRef, Props }
+import akka.actor.{Actor, ActorRef, Props}
 import de.htwg.se.battleship.model.Message._
 import de.htwg.se.battleship.model._
 import de.htwg.se.battleship.view.Swing.Player1Container
@@ -20,7 +20,7 @@ case class Controller(fieldSize: Int) extends Actor {
   val field2 = Field(fieldSize)
 
   //1x5Felder, 2x4Felder, 3x3Felder, 4x2Felder
-  val shipInventory: scala.collection.mutable.Map[ /*size*/ Int, /*amount*/ Int] = scala.collection.mutable.Map( /*5 -> 1, 4 -> 2, 3 -> 3, */ 2 -> 1)
+  val shipInventory: scala.collection.mutable.Map[ /*size*/ Int, /*amount*/ Int] = scala.collection.mutable.Map(/*5 -> 1, 4 -> 2, 3 -> 3, */ 2 -> 1)
 
   val player1 = Player(player1Color, field1, shipInventory.clone())
   val player2 = Player(player2Color, field2, shipInventory.clone())
@@ -52,6 +52,24 @@ case class Controller(fieldSize: Int) extends Actor {
         sender() ! PrintMessage("Player is not allowed to shoot at the moment")
         sender() ! state
       }
+    case PlaceShipViaColor(playerColor: String, startPoint: Point, shipSize: Int, orientation: Orientation) =>
+      val player = if (player1.COLOR.equals(playerColor)) player1 else player2
+      if (state.state.equals(PlaceShipTurn)
+        && player.COLOR.equals(state.activePlayer.COLOR)) {
+        placeShip(player, startPoint, shipSize, orientation)
+      } else {
+        sender() ! PrintMessage("Player is not allowed to place ships at the moment")
+        sender() ! state
+      }
+    case HitShipViaColor(playerColorToHit: String, pointToHit: Point) =>
+      val playerToHit = if (player1.COLOR.equals(playerColorToHit)) player1 else player2
+      if (state.state.equals(ShootTurn)
+        && playerToHit.COLOR.equals(state.otherPlayer.COLOR)) {
+        hitShip(playerToHit, pointToHit)
+      } else {
+        sender() ! PrintMessage("Player is not allowed to shoot at the moment")
+        sender() ! state
+      }
   }
 
   /**
@@ -64,9 +82,10 @@ case class Controller(fieldSize: Int) extends Actor {
 
   /**
     * place a ship
-    * @param player for the given player
-    * @param startPoint at the given point (further points will be calculated)
-    * @param shipSize with the given size
+    *
+    * @param player      for the given player
+    * @param startPoint  at the given point (further points will be calculated)
+    * @param shipSize    with the given size
     * @param orientation and orientation
     */
   def placeShip(player: Player, startPoint: Point, shipSize: Int, orientation: Orientation): Unit = {
@@ -81,7 +100,8 @@ case class Controller(fieldSize: Int) extends Actor {
 
   /**
     * asks the UIs for a ship placement action
-    * @param player the place the ship
+    *
+    * @param player     the place the ship
     * @param nextPlayer enemy
     */
   def placeShipTurn(player: Player, nextPlayer: Player): Unit = {
@@ -97,7 +117,8 @@ case class Controller(fieldSize: Int) extends Actor {
 
   /**
     * asks the UIs for a shoot ship action
-    * @param player to shoot
+    *
+    * @param player     to shoot
     * @param nextPlayer to get shot at
     */
   def shootShipTurn(player: Player, nextPlayer: Player): Unit = {
@@ -112,8 +133,9 @@ case class Controller(fieldSize: Int) extends Actor {
 
   /**
     * shoot action, try to hit a ship. Returns the result directly to UIs.
+    *
     * @param playerToHit player on which field will be shot
-    * @param pointToHit coordinates to shoot at
+    * @param pointToHit  coordinates to shoot at
     */
   def hitShip(playerToHit: Player, pointToHit: Point): Unit = {
     observers.foreach(_ ! PrintMessage(playerToHit.field.hitField(pointToHit)))

@@ -20,5 +20,7 @@ object Message {
   //actions of player
   case class PlaceShip(player: Player, startPoint: Point, shipSize: Int, orientation: Orientation) //place ship
   case class HitShip(playerToHit: Player, pointToHit: Point) //shoot at coordinates
+  case class PlaceShipViaColor(playerColor: String, startPoint: Point, shipSize: Int, orientation: Orientation) //place ship
+  case class HitShipViaColor(playerColorToHit: String, pointToHit: Point) //shoot at coordinates
 
 }
