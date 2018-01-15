@@ -1,12 +1,34 @@
 package de.htwg.se.battleship.controller
 
+import akka.actor.{ActorSystem, Props}
+import akka.testkit.{ImplicitSender, TestKit, TestProbe}
+import com.typesafe.config.ConfigFactory
+import de.htwg.se.battleship.Battleship
 import de.htwg.se.battleship.model.Point
-import de.htwg.se.battleship.view.View
+import de.htwg.se.battleship.view.{TuiView, View}
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{BeforeAndAfterAll, FlatSpec, FlatSpecLike, Matchers}
 
-class ControllerSpec extends FlatSpec with Matchers {
+class ControllerSpec extends TestKit(ActorSystem("Spec")) with ImplicitSender
+  with BeforeAndAfterAll with Matchers with FlatSpecLike {
+  private val config = ConfigFactory.load()
+  private val fieldSize = config.getInt("battleship.fieldSize")
+  private val actorSystemName = config.getString("battleship.actorSystemName")
+  private val controllerActorName = config.getString("battleship.controllerActorName")
+
+  override def afterAll: Unit = {
+    TestKit.shutdownActorSystem(system)
+  }
+
+  "A minimal game" should "do something" in {
+    val actorSystem = ActorSystem.create(actorSystemName)
+    val controller = actorSystem.actorOf(Controller.props(fieldSize), controllerActorName)
+    val tui = actorSystem.actorOf(Props(new TuiView(controller)))
+
+    val testProbePlayerController = TestProbe()
+
+  }
 
   /*val view = mock(classOf[View])
   val controller = Controller(4, view)
