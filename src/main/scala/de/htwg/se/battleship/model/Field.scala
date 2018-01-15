@@ -28,11 +28,11 @@ case class Field(size: Int) {
   /*
     calculate points used, check if all points free -> place ship and return true else return false
    */
-  def placeShip(point: Point, size: Int, orientation: Orientations.o): Boolean = {
+  def placeShip(point: Point, size: Int, orientation: Orientation): Boolean = {
     val fieldGridCopy = fieldGrid.clone()
     var success = true
     val ship = Ship(size)
-    if (orientation.equals(Orientations.HORIZONTAL)) {
+    if (orientation.equals(HORIZONTAL)) {
       for (x <- 0 until ship.SIZE) {
         val pointToPlace = Point(point.x + x, point.y)
         if (!addPointToGrid(pointToPlace, ship)) success = false

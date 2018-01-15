@@ -1,6 +1,6 @@
 package de.htwg.se.battleship.controller
 
-import akka.actor.{ Actor, ActorRef, Props }
+import akka.actor.{Actor, ActorRef, Props}
 import de.htwg.se.battleship.model.Message._
 import de.htwg.se.battleship.model._
 
@@ -33,7 +33,7 @@ case class Controller(fieldSize: Int, shipInventory: scala.collection.mutable.Ma
       observers += sender(); sender() ! state
     case UnregisterObserver => observers -= sender()
 
-    case PlaceShip(myPlayer: Player, startPoint: Point, shipSize: Int, orientation: Orientations.o) =>
+    case PlaceShip(myPlayer: Player, startPoint: Point, shipSize: Int, orientation: Orientation) =>
       val player = if (player1.COLOR.equals(myPlayer.COLOR)) player1 else player2
       if (state.state.equals(PlaceShipTurn)
         && player.COLOR.equals(state.activePlayer.COLOR)) {
@@ -51,7 +51,7 @@ case class Controller(fieldSize: Int, shipInventory: scala.collection.mutable.Ma
         sender() ! PrintMessage("Player is not allowed to shoot at the moment")
         sender() ! state
       }
-    case PlaceShipViaColor(playerColor: String, startPoint: Point, shipSize: Int, orientation: Orientations.o) =>
+    case PlaceShipViaColor(playerColor: String, startPoint: Point, shipSize: Int, orientation: Orientation) =>
       val player = if (player1.COLOR.equals(playerColor)) player1 else player2
       if (state.state.equals(PlaceShipTurn)
         && player.COLOR.equals(state.activePlayer.COLOR)) {
@@ -86,7 +86,7 @@ case class Controller(fieldSize: Int, shipInventory: scala.collection.mutable.Ma
    * @param shipSize    with the given size
    * @param orientation and orientation
    */
-  def placeShip(player: Player, startPoint: Point, shipSize: Int, orientation: Orientations.o): Unit = {
+  def placeShip(player: Player, startPoint: Point, shipSize: Int, orientation: Orientation): Unit = {
     if (player.placeShip(startPoint, shipSize, orientation)) {
       observers.foreach(_ ! PrintMessage("Ship placed"))
       placeShipTurn(state.otherPlayer, state.activePlayer)

@@ -1,7 +1,7 @@
 package de.htwg.se.battleship.view
 
 import akka.actor.Actor
-import de.htwg.se.battleship.model.{ Field, Orientations, Player, Point }
+import de.htwg.se.battleship.model.{Field, Orientation, Player, Point}
 
 trait View extends Actor {
 
@@ -19,6 +19,6 @@ trait View extends Actor {
 
   def readPoint(): Point
 
-  def readOrientation(): Orientations.o
+  def readOrientation(): Orientation
 
 }

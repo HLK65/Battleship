@@ -1,10 +1,10 @@
 package de.htwg.se.battleship.controller
 
 import akka.actor.ActorSystem
-import akka.testkit.{ ImplicitSender, TestActors, TestKit }
+import akka.testkit.{ImplicitSender, TestActors, TestKit}
 import de.htwg.se.battleship.model.Message._
-import de.htwg.se.battleship.model.{ Field, Orientations, Player, Point }
-import org.scalatest.{ BeforeAndAfterAll, FlatSpecLike, Matchers }
+import de.htwg.se.battleship.model._
+import org.scalatest.{BeforeAndAfterAll, FlatSpecLike, Matchers}
 
 class ControllerSpec() extends TestKit(ActorSystem("battleship")) with ImplicitSender with FlatSpecLike with Matchers with BeforeAndAfterAll {
   private val fieldSize = 10
@@ -41,11 +41,11 @@ class ControllerSpec() extends TestKit(ActorSystem("battleship")) with ImplicitS
     controller ! StartGame
     expectMsg(Update(PlaceShipTurn, player1, player2))
 
-    controller ! PlaceShip(player1, Point(1, 1), 2, Orientations.HORIZONTAL)
+    controller ! PlaceShip(player1, Point(1, 1), 2, HORIZONTAL)
     player1.shipInventory.remove(2)
     expectMsgAllOf(PrintMessage("Ship placed"), Update(PlaceShipTurn, player2, player1))
 
-    controller ! PlaceShip(player2, Point(1, 1), 2, Orientations.VERTICAL)
+    controller ! PlaceShip(player2, Point(1, 1), 2, VERTICAL)
     player2.shipInventory.remove(2)
     expectMsgAllOf(PrintMessage("Ship placed"), PrintMessage("all ships placed"), Update(ShootTurn, player1, player2))
 

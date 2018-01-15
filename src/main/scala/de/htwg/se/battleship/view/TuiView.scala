@@ -91,12 +91,12 @@ class TuiView(val controller: ActorRef) extends View {
     }
   }
 
-  override def readOrientation(): Orientations.o = {
+  override def readOrientation(): Orientation = {
     println("Choose orientation. 1 horizontal, else vertical")
     if (readInt() == 1) {
-      Orientations.HORIZONTAL
+      HORIZONTAL
     } else {
-      Orientations.VERTICAL
+      VERTICAL
     }
   }
 

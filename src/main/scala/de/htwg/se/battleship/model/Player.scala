@@ -1,7 +1,7 @@
 package de.htwg.se.battleship.model
 
 case class Player(COLOR: String, field: Field, shipInventory: scala.collection.mutable.Map[Int, Int]) {
-  def placeShip(startPoint: Point, shipSize: Int, orientation: Orientations.o): Boolean = {
+  def placeShip(startPoint: Point, shipSize: Int, orientation: Orientation): Boolean = {
     //check if player still got this ship in inventory
     if (shipInventory.contains(shipSize)) {
       val success = field.placeShip(startPoint, shipSize, orientation) //check if placement possible

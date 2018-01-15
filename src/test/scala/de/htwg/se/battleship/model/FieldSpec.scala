@@ -1,6 +1,6 @@
 package de.htwg.se.battleship.model
 
-import org.scalatest.{ BeforeAndAfter, FlatSpec, Matchers }
+import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
 
 class FieldSpec extends FlatSpec with Matchers with BeforeAndAfter {
   var field: Field = _
@@ -34,7 +34,7 @@ class FieldSpec extends FlatSpec with Matchers with BeforeAndAfter {
 
   "A Field" should "have a placeShip method" in {
     val shipSize = 2
-    field.placeShip(Point(1, 10), shipSize, Orientations.HORIZONTAL)
+    field.placeShip(Point(1, 10), shipSize, HORIZONTAL)
     field.fieldGrid.size should be(shipSize)
   }
 
@@ -43,7 +43,7 @@ class FieldSpec extends FlatSpec with Matchers with BeforeAndAfter {
   }
 
   "A Field" should "have a hitShip method and hit ship" in {
-    field.placeShip(Point(5, 5), 2, Orientations.HORIZONTAL)
+    field.placeShip(Point(5, 5), 2, HORIZONTAL)
     field.hitField(Point(6, 5)) should be("hit ship")
   }
 }

@@ -1,8 +1,8 @@
 package de.htwg.se.battleship.view
 
-import akka.actor.{ Actor, ActorRef }
+import akka.actor.{Actor, ActorRef}
 import de.htwg.se.battleship.model.Message._
-import de.htwg.se.battleship.model.{ Orientations, Player, Point }
+import de.htwg.se.battleship.model.{Orientation, Player, Point}
 import de.htwg.se.battleship.view.Swing.BattleshipWindow
 
 class GuiView(val controller: ActorRef) extends Actor {
@@ -55,7 +55,8 @@ class GuiView(val controller: ActorRef) extends Actor {
     controller ! HitShip(player, point)
     battleshipWindow.visible = false
   }
-  def placeShipCall(player: Player, point: Point, size: Int, orientation: Orientations.o): Unit = {
+
+  def placeShipCall(player: Player, point: Point, size: Int, orientation: Orientation): Unit = {
     controller ! PlaceShip(player, point, size, orientation)
     battleshipWindow.visible = false
   }

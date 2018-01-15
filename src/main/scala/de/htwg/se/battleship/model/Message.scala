@@ -18,9 +18,9 @@ object Message {
   case object AnnounceWinner extends Phase //announce winner
 
   //actions of player
-  case class PlaceShip(player: Player, startPoint: Point, shipSize: Int, orientation: Orientations.o) //place ship
+  case class PlaceShip(player: Player, startPoint: Point, shipSize: Int, orientation: Orientation) //place ship
   case class HitShip(playerToHit: Player, pointToHit: Point) //shoot at coordinates
-  case class PlaceShipViaColor(playerColor: String, startPoint: Point, shipSize: Int, orientation: Orientations.o) //place ship
+  case class PlaceShipViaColor(playerColor: String, startPoint: Point, shipSize: Int, orientation: Orientation) //place ship
   case class HitShipViaColor(playerColorToHit: String, pointToHit: Point) //shoot at coordinates
 
 }
