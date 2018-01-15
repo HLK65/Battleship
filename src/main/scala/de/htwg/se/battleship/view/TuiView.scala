@@ -5,6 +5,7 @@ import de.htwg.se.battleship.model.Message._
 import de.htwg.se.battleship.model._
 
 class TuiView(val controller: ActorRef) extends View {
+  val readOnly = false
 
   controller ! RegisterObserver
 
@@ -14,20 +15,19 @@ class TuiView(val controller: ActorRef) extends View {
   }
 
   def update(state: Phase, activePlayer: Player, otherPlayer: Player): Unit = {
-    playerSwitch(activePlayer)
-
-
-    printField(activePlayer.field, activePlayer.COLOR)
-    /*
-     state match {
-     case PlaceShipTurn =>
-     printField(activePlayer.field, activePlayer.COLOR)
-     placeShip(activePlayer)
-     case ShootTurn => shootTurn(otherPlayer)
-     case AnnounceWinner => announceWinner(activePlayer)
-     case Init => println("Init")
-     }
-     */
+    if (readOnly) {
+      printField(activePlayer.field, activePlayer.COLOR)
+    } else {
+      playerSwitch(activePlayer)
+      state match {
+        case PlaceShipTurn =>
+          printField(activePlayer.field, activePlayer.COLOR)
+          placeShip(activePlayer)
+        case ShootTurn => shootTurn(otherPlayer)
+        case AnnounceWinner => announceWinner(activePlayer)
+        case Init => println("Init")
+      }
+    }
   }
 
   def placeShip(player: Player): Unit = {
@@ -63,27 +63,41 @@ class TuiView(val controller: ActorRef) extends View {
     for (y <- 0 to field.size) {
       println()
       for (x <- 0 to field.size) {
-        if (x == 0 && y == 0) print("   ") //0 0
-        else if (y == 0 && x != 0) {
-          if (x.toString.length == 2) print(" " + x)
-          else print(" " + x + " ")
-        } else if (x == 0 && y != 0) {
-          if (y.toString.length == 2) print(" " + y)
-          else print(" " + y + " ")
-        } else if (field.hasShip(Point(x, y))) {
-          print(" x ")
-        } else {
-          print(" - ")
-        }
+        printOperation(x, y, field)
       }
     }
     println()
   }
 
-  override def readOrientation(): Orientation = {
+  def printOperation(x: Int, y: Int, field: Field): Unit = {
+    if (x == 0 && y == 0) {
+      print("   ")
+    } else if (y == 0 && x != 0) {
+      if (x.toString.length == 2) {
+        print(" " + x)
+      } else {
+        print(" " + x + " ")
+      }
+    } else if (x == 0 && y != 0) {
+      if (y.toString.length == 2) {
+        print(" " + y)
+      } else {
+        print(" " + y + " ")
+      }
+    } else if (field.hasShip(Point(x, y))) {
+      print(" x ")
+    } else {
+      print(" - ")
+    }
+  }
+
+  override def readOrientation(): Orientations.o = {
     println("Choose orientation. 1 horizontal, else vertical")
-    if (readInt() == 1) Orientation.HORIZONTAL
-    else Orientation.VERTICAL
+    if (readInt() == 1) {
+      Orientations.HORIZONTAL
+    } else {
+      Orientations.VERTICAL
+    }
   }
 
   override def selectShip(player: Player): Int = {

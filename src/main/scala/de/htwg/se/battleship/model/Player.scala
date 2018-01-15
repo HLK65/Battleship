@@ -1,12 +1,12 @@
 package de.htwg.se.battleship.model
 
 case class Player(COLOR: String, field: Field, shipInventory: scala.collection.mutable.Map[Int, Int]) {
-  def placeShip(startPoint: Point, shipSize: Int, orientation: Orientation): Boolean = {
+  def placeShip(startPoint: Point, shipSize: Int, orientation: Orientations.o): Boolean = {
     //check if player still got this ship in inventory
     if (shipInventory.contains(shipSize)) {
-      val success = field.placeShip(startPoint, shipSize, orientation.toString) //check if placement possible
+      val success = field.placeShip(startPoint, shipSize, orientation) //check if placement possible
       if (success) {
-        val amount = shipInventory.get(shipSize).get //todo test against: shipInventory(shipSize)
+        val amount = shipInventory(shipSize)
         if (amount - 1 > 0) {
           shipInventory.put(shipSize, amount - 1)
         } //reduce amount in inv

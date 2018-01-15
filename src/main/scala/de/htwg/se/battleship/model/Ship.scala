@@ -5,9 +5,9 @@ package de.htwg.se.battleship.model
  *
  * @param SIZE the amount of fields the ship takes.
  */
-case class Ship(val SIZE: Int) {
+case class Ship(SIZE: Int) {
 
-  var hitPoints = SIZE // TODO var vermeiden -> return new ship on hitShip
+  var hitPoints: Int = SIZE
 
   /**
    * Removes one point from the hitPoints
@@ -15,7 +15,7 @@ case class Ship(val SIZE: Int) {
    * @return new hitPoints
    */
   def hitShip(): Int = {
-    hitPoints = hitPoints - 1 //-= 1 schöner?
+    hitPoints -= 1
     hitPoints
   }
 }

@@ -1,9 +1,9 @@
 package de.htwg.se.battleship.view.Swing
 
-import java.awt.{Color, Dimension, Toolkit}
+import java.awt.{ Color, Toolkit }
 
 import de.htwg.se.battleship
-import de.htwg.se.battleship.model.{Orientation => _, _}
+import de.htwg.se.battleship.model.{ Orientations => _, _ }
 import de.htwg.se.battleship.view.GuiView
 
 import scala.swing._
@@ -147,14 +147,14 @@ class BattleshipWindow(guiView: GuiView) extends MainFrame {
       var hButton = new Button(ship + " sized Horizontal")
       hButton.action = new Action(ship + " sized Horizontal") {
         override def apply(): Unit = {
-          shipSelection = new ShipSelection(ship, de.htwg.se.battleship.model.Orientation.HORIZONTAL)
+          shipSelection = new ShipSelection(ship, de.htwg.se.battleship.model.Orientations.HORIZONTAL)
           shipText.text = ship + " sized selected"
         }
       }
       var vButton = new Button(ship + " sized Vertical")
       vButton.action = new Action(ship + " sized Vertical") {
         override def apply(): Unit = {
-          shipSelection = new ShipSelection(ship, de.htwg.se.battleship.model.Orientation.VERTICAL)
+          shipSelection = new ShipSelection(ship, de.htwg.se.battleship.model.Orientations.VERTICAL)
           shipText.text = ship + " sized selected"
         }
       }

@@ -6,14 +6,3 @@ var a = shipInventory(4)
 shipInventory(4).##.-(1)
 
 val fieldGrid: scala.collection.mutable.Map[Point, Ship] = scala.collection.mutable.Map()
-
-
-
-/* Todo
-  * unit tests
-  * GUI (swing or scalaFX)
-  * WUI (play)
-  * save and visualize where you have shot already
-  * akka
-  * [3+ player]
- */

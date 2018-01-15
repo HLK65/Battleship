@@ -34,7 +34,7 @@ class FieldSpec extends FlatSpec with Matchers with BeforeAndAfter {
 
   "A Field" should "have a placeShip method" in {
     val shipSize = 2
-    field.placeShip(Point(1, 10), shipSize, Orientation.HORIZONTAL.toString)
+    field.placeShip(Point(1, 10), shipSize, Orientations.HORIZONTAL)
     field.fieldGrid.size should be(shipSize)
   }
 
@@ -43,7 +43,7 @@ class FieldSpec extends FlatSpec with Matchers with BeforeAndAfter {
   }
 
   "A Field" should "have a hitShip method and hit ship" in {
-    field.placeShip(Point(5, 5), 2, Orientation.HORIZONTAL.toString)
+    field.placeShip(Point(5, 5), 2, Orientations.HORIZONTAL)
     field.hitField(Point(6, 5)) should be("hit ship")
   }
 }

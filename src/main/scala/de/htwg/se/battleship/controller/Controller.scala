@@ -5,10 +5,11 @@ import de.htwg.se.battleship.model.Message._
 import de.htwg.se.battleship.model._
 
 object Controller {
-  def props(fieldSize: Int): Props = Props(new Controller(fieldSize))
+  def props(fieldSize: Int, shipInventory: scala.collection.mutable.Map[Int, Int]): Props =
+    Props(new Controller(fieldSize, shipInventory))
 }
 
-case class Controller(fieldSize: Int) extends Actor {
+case class Controller(fieldSize: Int, shipInventory: scala.collection.mutable.Map[Int, Int]) extends Actor {
 
   private val observers = scala.collection.mutable.SortedSet.empty[ActorRef]
 
@@ -17,9 +18,6 @@ case class Controller(fieldSize: Int) extends Actor {
 
   val field1 = Field(fieldSize)
   val field2 = Field(fieldSize)
-
-  //1x5Felder, 2x4Felder, 3x3Felder, 4x2Felder
-  val shipInventory: scala.collection.mutable.Map[ /*size*/ Int, /*amount*/ Int] = scala.collection.mutable.Map(5 -> 1, 4 -> 2, 3 -> 3)
 
   val player1 = Player(player1Color, field1, shipInventory.clone())
   val player2 = Player(player2Color, field2, shipInventory.clone())
@@ -35,7 +33,8 @@ case class Controller(fieldSize: Int) extends Actor {
       observers += sender(); sender() ! state
     case UnregisterObserver => observers -= sender()
 
-    case PlaceShip(player: Player, startPoint: Point, shipSize: Int, orientation: Orientation) =>
+    case PlaceShip(myPlayer: Player, startPoint: Point, shipSize: Int, orientation: Orientations.o) =>
+      val player = if (player1.COLOR.equals(myPlayer.COLOR)) player1 else player2
       if (state.state.equals(PlaceShipTurn)
         && player.COLOR.equals(state.activePlayer.COLOR)) {
         placeShip(player, startPoint, shipSize, orientation)
@@ -44,14 +43,15 @@ case class Controller(fieldSize: Int) extends Actor {
         sender() ! state
       }
     case HitShip(playerToHit: Player, pointToHit: Point) =>
+      val player = if (player1.COLOR.equals(playerToHit.COLOR)) player1 else player2
       if (state.state.equals(ShootTurn)
         && playerToHit.COLOR.equals(state.otherPlayer.COLOR)) {
-        hitShip(playerToHit, pointToHit)
+        hitShip(player, pointToHit)
       } else {
         sender() ! PrintMessage("Player is not allowed to shoot at the moment")
         sender() ! state
       }
-    case PlaceShipViaColor(playerColor: String, startPoint: Point, shipSize: Int, orientation: Orientation) =>
+    case PlaceShipViaColor(playerColor: String, startPoint: Point, shipSize: Int, orientation: Orientations.o) =>
       val player = if (player1.COLOR.equals(playerColor)) player1 else player2
       if (state.state.equals(PlaceShipTurn)
         && player.COLOR.equals(state.activePlayer.COLOR)) {
@@ -86,7 +86,7 @@ case class Controller(fieldSize: Int) extends Actor {
    * @param shipSize    with the given size
    * @param orientation and orientation
    */
-  def placeShip(player: Player, startPoint: Point, shipSize: Int, orientation: Orientation): Unit = {
+  def placeShip(player: Player, startPoint: Point, shipSize: Int, orientation: Orientations.o): Unit = {
     if (player.placeShip(startPoint, shipSize, orientation)) {
       observers.foreach(_ ! PrintMessage("Ship placed"))
       placeShipTurn(state.otherPlayer, state.activePlayer)

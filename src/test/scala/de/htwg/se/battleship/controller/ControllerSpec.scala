@@ -1,46 +1,70 @@
 package de.htwg.se.battleship.controller
 
-import akka.actor.{ActorSystem, Props}
-import akka.testkit.{ImplicitSender, TestKit, TestProbe}
-import com.typesafe.config.ConfigFactory
-import de.htwg.se.battleship.Battleship
-import de.htwg.se.battleship.model.Point
-import de.htwg.se.battleship.view.{TuiView, View}
-import org.scalatest.mock.MockitoSugar
-import org.mockito.Mockito._
-import org.scalatest.{BeforeAndAfterAll, FlatSpec, FlatSpecLike, Matchers}
+import akka.actor.ActorSystem
+import akka.testkit.{ ImplicitSender, TestActors, TestKit }
+import de.htwg.se.battleship.model.Message._
+import de.htwg.se.battleship.model.{ Field, Orientations, Player, Point }
+import org.scalatest.{ BeforeAndAfterAll, FlatSpecLike, Matchers }
 
-class ControllerSpec extends TestKit(ActorSystem("Spec")) with ImplicitSender
-  with BeforeAndAfterAll with Matchers with FlatSpecLike {
-  private val config = ConfigFactory.load()
-  private val fieldSize = config.getInt("battleship.fieldSize")
-  private val actorSystemName = config.getString("battleship.actorSystemName")
-  private val controllerActorName = config.getString("battleship.controllerActorName")
+class ControllerSpec() extends TestKit(ActorSystem("battleship")) with ImplicitSender with FlatSpecLike with Matchers with BeforeAndAfterAll {
+  private val fieldSize = 10
+  private val shipInventory: scala.collection.mutable.Map[Int, Int] = scala.collection.mutable.Map(2 -> 1)
+  private val actorSystemName = "battleship"
+  private val controllerActorName = "controller"
+
+  /*def this() = this(ActorSystem("battleship"))*/
 
   override def afterAll: Unit = {
     TestKit.shutdownActorSystem(system)
   }
 
-  "A minimal game" should "do something" in {
+  "An Echo actor" should
+    "send back messages unchanged" in {
+      val echo = system.actorOf(TestActors.echoActorProps)
+      echo ! "hello world"
+      expectMsg("hello world")
+    }
+
+  "A minimal game" should "work" in {
     val actorSystem = ActorSystem.create(actorSystemName)
-    val controller = actorSystem.actorOf(Controller.props(fieldSize), controllerActorName)
-    val tui = actorSystem.actorOf(Props(new TuiView(controller)))
+    val controller = actorSystem.actorOf(Controller.props(fieldSize, shipInventory), controllerActorName)
+    //    val tui = actorSystem.actorOf(Props(new TuiView(controller)))
 
-    val testProbePlayerController = TestProbe()
+    //    val testProbePlayerController = TestProbe()
 
+    val player1 = Player("Red", Field(fieldSize), shipInventory.clone())
+    val player2 = Player("Blue", Field(fieldSize), shipInventory.clone())
+
+    controller ! RegisterObserver
+    expectMsg(Update(Init, player1, player2))
+
+    controller ! StartGame
+    expectMsg(Update(PlaceShipTurn, player1, player2))
+
+    controller ! PlaceShip(player1, Point(1, 1), 2, Orientations.HORIZONTAL)
+    player1.shipInventory.remove(2)
+    expectMsgAllOf(PrintMessage("Ship placed"), Update(PlaceShipTurn, player2, player1))
+
+    controller ! PlaceShip(player2, Point(1, 1), 2, Orientations.VERTICAL)
+    player2.shipInventory.remove(2)
+    expectMsgAllOf(PrintMessage("Ship placed"), PrintMessage("all ships placed"), Update(ShootTurn, player1, player2))
+
+    controller ! HitShip(player2, Point(3, 3))
+    expectMsgAllOf(PrintMessage("hit water"), Update(ShootTurn, player2, player1))
+
+    controller ! HitShip(player1, Point(2, 1))
+    player1.field.hitField(Point(2, 1))
+    expectMsgAllOf(PrintMessage("hit ship"), Update(ShootTurn, player1, player2))
+
+    controller ! HitShip(player2, Point(1, 2))
+    player2.field.hitField(Point(1, 2))
+    expectMsgAllOf(PrintMessage("hit ship"), Update(ShootTurn, player2, player1))
+
+    controller ! HitShip(player1, Point(1, 1))
+    player1.field.hitField(Point(1, 1))
+    expectMsgAllOf(PrintMessage("2 sunk"))
+
+    expectMsg(Update(AnnounceWinner, player2, player1))
   }
-
-  /*val view = mock(classOf[View])
-  val controller = Controller(4, view)
-  when(view.selectShip(controller.player2)).thenReturn(2)
-  when(view.selectShip(controller.player1)).thenReturn(1).thenReturn(2)
-  when(view.readPoint()).thenReturn(Point(1, 5)).thenReturn(Point(1, 3)).thenReturn(Point(3, 1))
-  when(view.readOrientation()).thenReturn(1).thenReturn(2).thenReturn(1)
-  when(view.shootTurn()).thenReturn(Point(3, 1)).
-    thenReturn(Point(1, 3)).thenReturn(Point(5, 1)).thenReturn(Point(3, 2)).thenReturn(Point(2, 3)).
-    thenReturn(Point(4, 1)).thenReturn(Point(1, 4))
-  "a Controller" should "play a game" in {
-    controller.gameStart()
-  }*/
 
 }
