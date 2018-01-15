@@ -33,7 +33,7 @@ class TuiView(val controller: ActorRef) extends View {
   }
 
   override def announceWinner(winner: Player): Unit = {
-    println(Console.BLACK + winner.COLOR + " won with " + winner.field.size + " boatpoints left")
+    println(Console.BLACK + winner.COLOR + " won")
   }
 
   override def shootTurn(enemy: Player): Unit = {

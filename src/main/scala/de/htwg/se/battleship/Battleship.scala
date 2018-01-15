@@ -14,7 +14,7 @@ object Battleship {
     val (fieldSize, actorSystemName, controllerActorName) = getConfig
     val actorSystem = ActorSystem.create(actorSystemName)
     val controller = actorSystem.actorOf(Controller.props(fieldSize), controllerActorName)
-    //val tui = actorSystem.actorOf(Props(new TuiView(controller)))
+    val tui = actorSystem.actorOf(Props(new TuiView(controller)))
     val gui = actorSystem.actorOf(Props(new GuiView(controller)))
 
     controller.tell(StartGame, null)
