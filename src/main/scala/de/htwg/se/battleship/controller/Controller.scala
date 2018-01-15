@@ -138,7 +138,8 @@ case class Controller(fieldSize: Int) extends Actor {
     * @param pointToHit  coordinates to shoot at
     */
   def hitShip(playerToHit: Player, pointToHit: Point): Unit = {
-    observers.foreach(_ ! PrintMessage(playerToHit.field.hitField(pointToHit)))
+    val result = playerToHit.field.hitField(pointToHit)
+    observers.foreach(_ ! PrintMessage(result))
     shootShipTurn(state.otherPlayer, state.activePlayer)
   }
 }
