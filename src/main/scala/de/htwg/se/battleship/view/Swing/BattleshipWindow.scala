@@ -24,7 +24,7 @@ class BattleshipWindow(guiView: GuiView) extends MainFrame {
     contents = createHitField(player)
   }
 
-  def printMessage(message:String) = {
+  def printMessage(message: String) = {
 
     Dialog.showMessage(contents.head, message, "Attention")
   }
@@ -56,7 +56,7 @@ class BattleshipWindow(guiView: GuiView) extends MainFrame {
           panel.contents += createText(" " + x)
         } else if (x == 0 && y != 0) {
           panel.contents += createText(" " + y)
-        } else if (field.hasShip(Point(x, y))) {
+        } else if (field.hasShip(Point(x, y)) && placeTurn) {
           panel.contents += createShip()
         } else {
           if (placeTurn) {
@@ -112,7 +112,7 @@ class BattleshipWindow(guiView: GuiView) extends MainFrame {
   private def createShipSelection(player: Player): BoxPanel = {
     var selectPannel = new BoxPanel(Orientation.Horizontal)
     val shipText = this.createText("");
-    for ((key, ship) <- player.shipInventory) {
+    for ((ship, key) <- player.shipInventory) {
 
       var box = new BoxPanel(Orientation.Vertical)
       var hButton = new Button(ship + " sized Horizontal")
