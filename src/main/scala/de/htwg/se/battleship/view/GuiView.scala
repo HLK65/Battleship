@@ -19,7 +19,10 @@ class GuiView(val controller: ActorRef) extends Actor {
     state match {
       case PlaceShipTurn =>
         placeShip(activePlayer)
-      case ShootTurn => shootTurn(otherPlayer)
+      case ShootTurn =>
+        println(activePlayer.COLOR)
+        println(otherPlayer.COLOR)
+        shootTurn(otherPlayer)
       case AnnounceWinner => announceWinner(activePlayer)
       case Init => init()
     }
