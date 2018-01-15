@@ -37,7 +37,6 @@ class TuiView(val controller: ActorRef) extends View {
   }
 
   override def shootTurn(enemy: Player): Unit = {
-
     println("Select Point you want to shoot. x then y")
     val xInput = readInt()
     val yInput = readInt()
