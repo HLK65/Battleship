@@ -11,7 +11,7 @@ class TuiView(val controller: ActorRef) extends View {
 
   override def receive: Receive = {
     case Update(state: Phase, activePlayer: Player, otherPlayer: Player) => update(state, activePlayer, otherPlayer)
-    case PrintMessage(message: String) => println(Console.BLACK + message)
+    case PrintMessage(message: String) => printMessage(Console.BLACK + message)
   }
 
   def update(state: Phase, activePlayer: Player, otherPlayer: Player): Unit = {
@@ -25,7 +25,7 @@ class TuiView(val controller: ActorRef) extends View {
           placeShip(activePlayer)
         case ShootTurn => shootTurn(otherPlayer)
         case AnnounceWinner => announceWinner(activePlayer)
-        case Init => println("Init")
+        case Init => printMessage("Init")
       }
     }
   }
@@ -38,11 +38,11 @@ class TuiView(val controller: ActorRef) extends View {
   }
 
   override def announceWinner(winner: Player): Unit = {
-    println(Console.BLACK + winner.COLOR + " won")
+    printMessage(Console.BLACK + winner.COLOR + " won")
   }
 
   override def shootTurn(enemy: Player): Unit = {
-    println("Select Point you want to shoot. x then y")
+    printMessage("Select Point you want to shoot. x then y")
     val xInput = readInt()
     val yInput = readInt()
     val point = Point(xInput, yInput)
@@ -55,18 +55,18 @@ class TuiView(val controller: ActorRef) extends View {
     } else {
       print(Console.BLUE)
     }
-    println(player.COLOR + "s turn")
+    printMessage(player.COLOR + "s turn")
   }
 
   def printField(field: Field, color: String): Unit = {
-    println("Field of player " + color)
+    printMessage("Field of player " + color)
     for (y <- 0 to field.size) {
-      println()
+      printMessage("")
       for (x <- 0 to field.size) {
         printOperation(x, y, field)
       }
     }
-    println()
+    printMessage("")
   }
 
   def printOperation(x: Int, y: Int, field: Field): Unit = {
@@ -92,7 +92,7 @@ class TuiView(val controller: ActorRef) extends View {
   }
 
   override def readOrientation(): Orientation = {
-    println("Choose orientation. 1 horizontal, else vertical")
+    printMessage("Choose orientation. 1 horizontal, else vertical")
     if (readInt() == 1) {
       HORIZONTAL
     } else {
@@ -102,29 +102,40 @@ class TuiView(val controller: ActorRef) extends View {
 
   override def selectShip(player: Player): Int = {
     //show player what ships he still has to place
-    println("Ships you can place: " + player.shipInventory.toString() + " [Size -> Amount]")
+    printMessage("Ships you can place: " + player.shipInventory.toString() + " [Size -> Amount]")
     //read what kind of ship the player wanted to place
-    println("Select size of the ship you want to place")
+    printMessage("Select size of the ship you want to place")
     readInt()
   }
 
   override def readPoint(): Point = {
-    println("Select top-left Point. x then y")
+    printMessage("Select top-left Point. x then y")
     val pointInputX = readInt()
     val pointInputY = readInt()
     val point = Point(pointInputX, pointInputY)
     point
   }
 
+  /**
+    * prints string
+    * useful to add file output or logger with a single line
+    *
+    * @param message string to handle
+    */
   override def printMessage(message: String): Unit = {
     println(message)
   }
 
+  /**
+    * reads int from console, wrapped with try catch
+    *
+    * @return integer
+    */
   def readInt(): Int = {
     try scala.io.StdIn.readInt()
     catch {
       case _: Throwable =>
-        println("try again... numbers only")
+        printMessage("try again... numbers only")
         readInt()
     }
   }

@@ -30,42 +30,55 @@ case class Controller(fieldSize: Int, shipInventory: scala.collection.mutable.Ma
     case UnregisterObserver => observers -= sender()
 
     case PlaceShip(myPlayer: Player, startPoint: Point, shipSize: Int, orientation: Orientation) =>
-      val player = if (player1.COLOR.equals(myPlayer.COLOR)) player1 else player2
-      if (state.state.equals(PlaceShipTurn)
-        && player.COLOR.equals(state.activePlayer.COLOR)) {
-        placeShip(player, startPoint, shipSize, orientation)
-      } else {
-        sender() ! PrintMessage("Player is not allowed to place ships at the moment")
-        sender() ! state
-      }
+      handlePlaceShipAction(myPlayer, startPoint, shipSize, orientation, sender())
     case HitShip(playerToHit: Player, pointToHit: Point) =>
-      val player = if (player1.COLOR.equals(playerToHit.COLOR)) player1 else player2
-      if (state.state.equals(ShootTurn)
-        && playerToHit.COLOR.equals(state.otherPlayer.COLOR)) {
-        hitShip(player, pointToHit)
-      } else {
-        sender() ! PrintMessage("Player is not allowed to shoot at the moment")
-        sender() ! state
-      }
+      handleHitShipAction(playerToHit, pointToHit, sender())
     case PlaceShipViaColor(playerColor: String, startPoint: Point, shipSize: Int, orientation: Orientation) =>
       val player = if (player1.COLOR.equals(playerColor)) player1 else player2
-      if (state.state.equals(PlaceShipTurn)
-        && player.COLOR.equals(state.activePlayer.COLOR)) {
-        placeShip(player, startPoint, shipSize, orientation)
-      } else {
-        sender() ! PrintMessage("Player is not allowed to place ships at the moment")
-        sender() ! state
-      }
+      handlePlaceShipAction(player, startPoint, shipSize, orientation, sender())
     case HitShipViaColor(playerColorToHit: String, pointToHit: Point) =>
       val playerToHit = if (player1.COLOR.equals(playerColorToHit)) player1 else player2
-      if (state.state.equals(ShootTurn)
-        && playerToHit.COLOR.equals(state.otherPlayer.COLOR)) {
-        hitShip(playerToHit, pointToHit)
-      } else {
-        sender() ! PrintMessage("Player is not allowed to shoot at the moment")
-        sender() ! state
-      }
+      handleHitShipAction(playerToHit, pointToHit, sender())
   }
+
+  /**
+    * handles incoming place ship action
+    *
+    * @param myPlayer    trying to place the ship
+    * @param startPoint  top-left point where to place the ship
+    * @param shipSize    size of the ship
+    * @param orientation orientation of the ship
+    * @param sender      ActorRef to sender
+    */
+  def handlePlaceShipAction(myPlayer: Player, startPoint: Point, shipSize: Int, orientation: Orientation, sender: ActorRef): Unit = {
+    val player = if (player1.COLOR.equals(myPlayer.COLOR)) player1 else player2
+    if (state.state.equals(PlaceShipTurn)
+      && player.COLOR.equals(state.activePlayer.COLOR)) {
+      placeShip(player, startPoint, shipSize, orientation)
+    } else {
+      sender ! PrintMessage("Player is not allowed to place ships at the moment")
+      sender ! state
+    }
+  }
+
+  /**
+    * handles incoming hit ship action
+    *
+    * @param playerToHit player which field gets shot on
+    * @param pointToHit  coordinates where to shoot
+    * @param sender      ActorRef to sender
+    */
+  def handleHitShipAction(playerToHit: Player, pointToHit: Point, sender: ActorRef): Unit = {
+    val player = if (player1.COLOR.equals(playerToHit.COLOR)) player1 else player2
+    if (state.state.equals(ShootTurn)
+      && playerToHit.COLOR.equals(state.otherPlayer.COLOR)) {
+      hitShip(player, pointToHit)
+    } else {
+      sender ! PrintMessage("Player is not allowed to shoot at the moment")
+      sender ! state
+    }
+  }
+
 
   /**
     * triggers the game start
