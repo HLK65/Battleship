@@ -5,7 +5,7 @@ import de.htwg.se.battleship.model.Message._
 import de.htwg.se.battleship.model._
 
 class TuiView(val controller: ActorRef) extends View {
-  val readOnly = false
+  val readOnly = true
 
   controller ! RegisterObserver
 
@@ -117,20 +117,20 @@ class TuiView(val controller: ActorRef) extends View {
   }
 
   /**
-    * prints string
-    * useful to add file output or logger with a single line
-    *
-    * @param message string to handle
-    */
+   * prints string
+   * useful to add file output or logger with a single line
+   *
+   * @param message string to handle
+   */
   override def printMessage(message: String): Unit = {
     println(message)
   }
 
   /**
-    * reads int from console, wrapped with try catch
-    *
-    * @return integer
-    */
+   * reads int from console, wrapped with try catch
+   *
+   * @return integer
+   */
   def readInt(): Int = {
     try scala.io.StdIn.readInt()
     catch {

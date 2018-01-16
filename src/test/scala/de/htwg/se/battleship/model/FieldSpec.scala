@@ -1,6 +1,6 @@
 package de.htwg.se.battleship.model
 
-import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
+import org.scalatest.{ BeforeAndAfter, FlatSpec, Matchers }
 
 class FieldSpec extends FlatSpec with Matchers with BeforeAndAfter {
   var field: Field = _

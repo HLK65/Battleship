@@ -1,10 +1,10 @@
 package de.htwg.se.battleship.controller
 
 import akka.actor.ActorSystem
-import akka.testkit.{ImplicitSender, TestKit}
+import akka.testkit.{ ImplicitSender, TestKit }
 import de.htwg.se.battleship.model.Message._
 import de.htwg.se.battleship.model._
-import org.scalatest.{BeforeAndAfterAll, FlatSpecLike, Matchers}
+import org.scalatest.{ BeforeAndAfterAll, FlatSpecLike, Matchers }
 
 class ControllerSpec() extends TestKit(ActorSystem("battleship")) with ImplicitSender with FlatSpecLike with Matchers with BeforeAndAfterAll {
   private val fieldSize = 10

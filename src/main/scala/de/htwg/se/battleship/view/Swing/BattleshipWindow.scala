@@ -1,9 +1,9 @@
 package de.htwg.se.battleship.view.Swing
 
-import java.awt.{Color, Toolkit}
+import java.awt.{ Color, Toolkit }
 
 import de.htwg.se.battleship
-import de.htwg.se.battleship.model.{Orientation => _, _}
+import de.htwg.se.battleship.model.{ Orientation => _, _ }
 import de.htwg.se.battleship.view.GuiView
 
 import scala.swing._

@@ -1,6 +1,6 @@
 package de.htwg.se.battleship.model
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.{ FlatSpec, Matchers }
 
 class PlayerSpec extends FlatSpec with Matchers {
   val shipInventory: scala.collection.mutable.Map[Int, Int] =
