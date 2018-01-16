@@ -45,6 +45,7 @@ class GuiView(val controller: ActorRef) extends Actor {
     val message = winner.COLOR + " has Won the game"
     printMessage(message)
     battleshipWindow.endgame()
+    this.battleshipWindow.visible = false
   }
 
   def printMessage(message: String): Unit = {
