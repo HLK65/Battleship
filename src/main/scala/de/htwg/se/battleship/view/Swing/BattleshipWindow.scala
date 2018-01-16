@@ -118,7 +118,7 @@ class BattleshipWindow(guiView: GuiView) extends MainFrame {
 
   private def createShipSelection(player: Player): BoxPanel = {
     var selectPannel = new BoxPanel(Orientation.Horizontal)
-    val shipText = this.createText("");
+    val shipText = this.createText("")
     for ((ship, key) <- player.shipInventory) {
 
       var box = new BoxPanel(Orientation.Vertical)
