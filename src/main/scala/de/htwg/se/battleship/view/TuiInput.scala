@@ -3,7 +3,7 @@ package de.htwg.se.battleship.view
 import akka.actor.{Actor, ActorRef}
 import de.htwg.se.battleship.model.Message.ProcessTuiInput
 
-class TuiInput(val tuiView: ActorRef) {
+class TuiInput(val tuiView: ActorRef) extends Actor {
   while (true) {
     tuiView ! ProcessTuiInput(readInt())
   }
@@ -16,11 +16,12 @@ class TuiInput(val tuiView: ActorRef) {
   def readInt(): Int = {
     try {
       scala.io.StdIn.readInt()
-    }
-    catch {
-      case _: Throwable =>
+    } catch {
+      case _: NumberFormatException =>
         println("try again... numbers only")
         readInt()
     }
   }
+
+  override def receive: Receive = ???
 }

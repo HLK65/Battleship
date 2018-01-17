@@ -1,67 +1,126 @@
 package de.htwg.se.battleship.view
 
-import akka.actor.ActorRef
+import akka.actor.{Actor, ActorRef}
 import de.htwg.se.battleship.model.Message._
 import de.htwg.se.battleship.model._
 
-class TuiView(val controller: ActorRef) extends View {
-  val readOnly = true
-  var state = ""
+class TuiView(val controller: ActorRef) extends Actor {
+  //vars for async, non blocking input
+  var waitingForInput = "none"
+  var placeShip_size: Int = -1
+  var placeShip_x: Int = -1
+  var placeShip_y: Int = -1
+  var hitShip_x: Int = -1
+  var activePlayer: Player = _
+  var otherPlayer: Player = _
 
   controller ! RegisterObserver
 
-
+  /**
+    * akka receiver
+    */
   override def receive: Receive = {
     case Update(state: Phase, activePlayer: Player, otherPlayer: Player) => update(state, activePlayer, otherPlayer)
     case PrintMessage(message: String) => printMessage(Console.BLACK + message)
     case ProcessTuiInput(input: Int) => processTuiInput(input)
   }
 
+  /**
+    * process async, non blocking input
+    *
+    * @param input integer, size, coordinate or orientation
+    */
   def processTuiInput(input: Int): Unit = {
-    state match {
+    waitingForInput match {
       case "placeShip_size" =>
+        placeShip_size = input
+        waitingForInput = "placeShip_x"
+        printMessage("Select top-left Point. x then y")
       case "placeShip_x" =>
+        placeShip_x = input
+        waitingForInput = "placeShip_y"
       case "placeShip_y" =>
+        placeShip_y = input
+        waitingForInput = "placeShip_orientation"
+        printMessage("Choose orientation. 1 horizontal, else vertical")
+      case "placeShip_orientation" =>
+        waitingForInput = "none"
+        controller ! PlaceShip(activePlayer, Point(placeShip_x, placeShip_y), placeShip_size, convertOrientation(input))
       case "hitShip_x" =>
+        hitShip_x = input
+        waitingForInput = "hitShip_y"
       case "hitShip_y" =>
+        waitingForInput = "none"
+        controller ! HitShip(otherPlayer, Point(hitShip_x, input))
+      case "none" => printMessage("Input ignored, no input expected")
     }
   }
 
-  def update(state: Phase, activePlayer: Player, otherPlayer: Player): Unit = {
-    if (readOnly) {
-      printField(activePlayer.field, activePlayer.COLOR)
+  /**
+    * converts integer input to orientation
+    *
+    * @param int 1 for horizontal, else vertical
+    * @return Horizontal or Vertical
+    */
+  def convertOrientation(int: Int): Orientation = {
+    if (int == 1) {
+      HORIZONTAL
     } else {
-      playerSwitch(activePlayer)
-      state match {
-        case PlaceShipTurn =>
-          printField(activePlayer.field, activePlayer.COLOR)
-          placeShip(activePlayer)
-        case ShootTurn => shootTurn(otherPlayer)
-        case AnnounceWinner => announceWinner(activePlayer)
-        case Init => printMessage("Init")
-      }
+      VERTICAL
     }
   }
 
-  def placeShip(player: Player): Unit = {
-    val size = selectShip(player)
-    val point = readPoint()
-    val orientation = readOrientation()
-    controller ! PlaceShip(player, point, size, orientation)
+  /**
+    * prints string
+    * useful to add file output or logger with a single line
+    *
+    * @param message string to handle
+    */
+  def printMessage(message: String): Unit = {
+    println(message)
   }
 
-  override def announceWinner(winner: Player): Unit = {
+  /**
+    * processes updates of the controller
+    *
+    * @param state        of the game
+    * @param activePlayer who's turn it is
+    * @param otherPlayer  enemy player
+    */
+  def update(state: Phase, activePlayer: Player, otherPlayer: Player): Unit = {
+    this.activePlayer = activePlayer
+    this.otherPlayer = otherPlayer
+
+    playerSwitch(activePlayer)
+    state match {
+      case PlaceShipTurn =>
+        printField(activePlayer.field, activePlayer.COLOR)
+        printMessage("Ships you can place: " + activePlayer.shipInventory.toString() + " [Size -> Amount]")
+        printMessage("Select size of the ship you want to place")
+        waitingForInput = "placeShip_size"
+      case ShootTurn =>
+        waitingForInput = "hitShip_x"
+        printMessage("Select Point you want to shoot. x then y")
+      case AnnounceWinner => announceWinner(activePlayer)
+      case Init => printMessage("Init")
+
+    }
+  }
+
+  /**
+    * prints out winner
+    *
+    * @param winner player who won the game
+    */
+  def announceWinner(winner: Player): Unit = {
     printMessage(Console.BLACK + winner.COLOR + " won")
   }
 
-  override def shootTurn(enemy: Player): Unit = {
-    printMessage("Select Point you want to shoot. x then y")
-    val xInput = readInt()
-    val yInput = readInt()
-    val point = Point(xInput, yInput)
-    controller ! HitShip(enemy, point)
-  }
-
+  /**
+    * announces players turn and changes console output color
+    *
+    * @param player to switch to
+   */
   def playerSwitch(player: Player): Unit = {
     if (player.COLOR.toString.equals("Red")) {
       print(Console.RED)
@@ -71,18 +130,31 @@ class TuiView(val controller: ActorRef) extends View {
     printMessage(player.COLOR + "s turn")
   }
 
+  /**
+    * prints the players field
+    *
+    * @param field of the player
+    * @param color of the player
+   */
   def printField(field: Field, color: String): Unit = {
     printMessage("Field of player " + color)
     for (y <- 0 to field.size) {
       printMessage("")
       for (x <- 0 to field.size) {
-        printOperation(x, y, field)
+        printFieldCoordinate(x, y, field)
       }
     }
     printMessage("")
   }
 
-  def printOperation(x: Int, y: Int, field: Field): Unit = {
+  /**
+    * prints a coordinate of the field
+    *
+    * @param x     of coordinate
+    * @param y     of coordinate
+    * @param field of the player
+    */
+  def printFieldCoordinate(x: Int, y: Int, field: Field): Unit = {
     if (x == 0 && y == 0) {
       print("   ")
     } else if (y == 0 && x != 0) {
@@ -103,54 +175,4 @@ class TuiView(val controller: ActorRef) extends View {
       print(" - ")
     }
   }
-
-  override def readOrientation(): Orientation = {
-    printMessage("Choose orientation. 1 horizontal, else vertical")
-    if (readInt() == 1) {
-      HORIZONTAL
-    } else {
-      VERTICAL
-    }
-  }
-
-  override def selectShip(player: Player): Int = {
-    //show player what ships he still has to place
-    printMessage("Ships you can place: " + player.shipInventory.toString() + " [Size -> Amount]")
-    //read what kind of ship the player wanted to place
-    printMessage("Select size of the ship you want to place")
-    readInt()
-  }
-
-  override def readPoint(): Point = {
-    printMessage("Select top-left Point. x then y")
-    val pointInputX = readInt()
-    val pointInputY = readInt()
-    val point = Point(pointInputX, pointInputY)
-    point
-  }
-
-  /**
-   * prints string
-   * useful to add file output or logger with a single line
-   *
-   * @param message string to handle
-   */
-  override def printMessage(message: String): Unit = {
-    println(message)
-  }
-
-  /**
-   * reads int from console, wrapped with try catch
-   *
-   * @return integer
-   */
-  def readInt(): Int = {
-    try scala.io.StdIn.readInt()
-    catch {
-      case _: Throwable =>
-        printMessage("try again... numbers only")
-        readInt()
-    }
-  }
-
 }

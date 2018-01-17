@@ -1,6 +1,6 @@
 package de.htwg.se.battleship.controller
 
-import akka.actor.{ Actor, ActorRef, Props }
+import akka.actor.{Actor, ActorRef, Props}
 import de.htwg.se.battleship.model.Message._
 import de.htwg.se.battleship.model._
 
@@ -17,8 +17,8 @@ case class Controller(fieldSize: Int, shipInventory: scala.collection.mutable.Ma
   val field2 = Field(fieldSize)
   val player1 = Player(player1Color, field1, shipInventory.clone())
   val player2 = Player(player2Color, field2, shipInventory.clone())
-  private val observers = scala.collection.mutable.SortedSet.empty[ActorRef]
   var state = Update(Init, player1, player2)
+  private val observers = scala.collection.mutable.SortedSet.empty[ActorRef]
 
   /**
    * handle incoming akka messages
