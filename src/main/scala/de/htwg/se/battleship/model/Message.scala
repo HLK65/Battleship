@@ -14,6 +14,8 @@ object Message {
 
   case class Update(state: Phase, activePlayer: Player, otherPlayer: Player) //update observers after action or registration
 
+  case class ProcessTuiInput(int: Int)
+
   //actions of player
   case class PlaceShip(player: Player, startPoint: Point, shipSize: Int, orientation: Orientation) //place ship
 

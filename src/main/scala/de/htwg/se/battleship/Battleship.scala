@@ -1,10 +1,10 @@
 package de.htwg.se.battleship
 
-import akka.actor.{ ActorSystem, Props }
+import akka.actor.{ActorSystem, Props}
 import com.typesafe.config.ConfigFactory
 import de.htwg.se.battleship.controller.Controller
 import de.htwg.se.battleship.model.Message.StartGame
-import de.htwg.se.battleship.view.{ GuiView, TuiView }
+import de.htwg.se.battleship.view.{GuiView, TuiInput, TuiView}
 
 object Battleship {
 
@@ -14,7 +14,8 @@ object Battleship {
     val shipInventory: scala.collection.mutable.Map[Int, Int] = scala.collection.mutable.Map( /*5 -> 1, 4 -> 2, 3 -> 3*/ 2 -> 1)
     val actorSystem = ActorSystem.create(actorSystemName)
     val controller = actorSystem.actorOf(Controller.props(fieldSize, shipInventory), controllerActorName)
-    actorSystem.actorOf(Props(new TuiView(controller)))
+    val tui = actorSystem.actorOf(Props(new TuiView(controller)))
+    val tuiInput = actorSystem.actorOf(Props(new TuiInput(tui)))
     actorSystem.actorOf(Props(new GuiView(controller)))
 
     controller ! StartGame

@@ -1,8 +1,8 @@
 package de.htwg.se.battleship.view
 
-import akka.actor.{ Actor, ActorRef }
+import akka.actor.{Actor, ActorRef}
 import de.htwg.se.battleship.model.Message._
-import de.htwg.se.battleship.model.{ Orientation, Player, Point }
+import de.htwg.se.battleship.model.{Orientation, Player, Point}
 import de.htwg.se.battleship.view.Swing.BattleshipWindow
 
 class GuiView(val controller: ActorRef) extends Actor {
@@ -20,8 +20,6 @@ class GuiView(val controller: ActorRef) extends Actor {
       case PlaceShipTurn =>
         placeShip(activePlayer)
       case ShootTurn =>
-        println(activePlayer.COLOR)
-        println(otherPlayer.COLOR)
         shootTurn(otherPlayer)
       case AnnounceWinner => announceWinner(activePlayer)
       case Init => init()
