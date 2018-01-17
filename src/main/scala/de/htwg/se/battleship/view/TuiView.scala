@@ -6,12 +6,25 @@ import de.htwg.se.battleship.model._
 
 class TuiView(val controller: ActorRef) extends View {
   val readOnly = true
+  var state = ""
 
   controller ! RegisterObserver
+
 
   override def receive: Receive = {
     case Update(state: Phase, activePlayer: Player, otherPlayer: Player) => update(state, activePlayer, otherPlayer)
     case PrintMessage(message: String) => printMessage(Console.BLACK + message)
+    case ProcessTuiInput(input: Int) => processTuiInput(input)
+  }
+
+  def processTuiInput(input: Int): Unit = {
+    state match {
+      case "placeShip_size" =>
+      case "placeShip_x" =>
+      case "placeShip_y" =>
+      case "hitShip_x" =>
+      case "hitShip_y" =>
+    }
   }
 
   def update(state: Phase, activePlayer: Player, otherPlayer: Player): Unit = {
