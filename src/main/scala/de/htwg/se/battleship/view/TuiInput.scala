@@ -23,5 +23,5 @@ class TuiInput(val tuiView: ActorRef) extends Actor {
     }
   }
 
-  override def receive: Receive = ???
+  override def receive: Receive = _
 }
